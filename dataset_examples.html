@@ -1,0 +1,1453 @@
+<!doctype html><meta charset="utf-8">
+<title>Dataset examples</title>
+<style>
+:root{--ink:#1a1d21;--muted:#5f6368;--line:#dfe3e8;--soft:#f7f9fb;--accent:#005f73}
+*{box-sizing:border-box}
+body{font:15px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);
+     margin:0;padding:2rem;max-width:1180px;margin-inline:auto;background:#fff}
+h1{font-size:1.6rem;margin:0 0 .3rem}
+h2{font-size:1.2rem;margin:2.6rem 0 .2rem;padding-top:1.2rem;
+   border-top:2px solid var(--accent);color:var(--accent)}
+h3{font-size:.95rem;margin:1.4rem 0 .4rem;color:var(--muted);font-weight:600}
+.lede{color:var(--muted);margin-bottom:1.6rem}
+.card{background:var(--soft);border:1px solid var(--line);border-radius:6px;
+      padding:.8rem 1rem;margin:.6rem 0 1rem}
+.card dt{font-weight:600;font-size:.8rem;text-transform:uppercase;
+         letter-spacing:.04em;color:var(--muted);margin-top:.5rem}
+.card dd{margin:.15rem 0 0}
+.meta{font-family:ui-monospace,Consolas,monospace;font-size:.78rem;
+      color:var(--muted);margin:.9rem 0 .3rem}
+pre{white-space:pre-wrap;word-wrap:break-word;background:#fff;
+    border:1px solid var(--line);border-radius:5px;padding:.8rem;
+    font:12.5px/1.55 ui-monospace,Consolas,monospace;max-height:340px;
+    overflow:auto;margin:0}
+mark.act{background:#ffe9a8;border-bottom:2px solid #d99b00;padding:0 1px}
+table{border-collapse:collapse;width:100%;margin:.5rem 0 0;font-size:.85rem}
+th{background:var(--accent);color:#fff;text-align:left;padding:.4rem .6rem;
+   font-weight:600;font-size:.78rem}
+td{border-bottom:1px solid var(--line);padding:.4rem .6rem;vertical-align:top}
+td.t{font-weight:600;color:var(--accent);white-space:nowrap}
+.none{color:var(--muted);font-style:italic;padding:.5rem 0}
+.warn{background:#fff4e5;border-left:3px solid #d99b00;padding:.6rem .9rem;
+      margin:.6rem 0;font-size:.9rem}
+</style>
+<h1>Corpora in this project: what the text and the annotation look like</h1>
+<p class="lede">Representative examples from every corpus we hold. Highlighted spans are annotated follow-up actions; hover for the type and timing. Examples are selected by rule, not by hand: the note nearest median length that carries an annotation, the shortest, and the one with the most items.</p>
+<div class="warn">CLIP, CORAL and MedDec are credentialed PhysioNet corpora, downloaded under signed data use agreements and shown here from local copies. MedDec ships annotation offsets but not the note text, which must be reconstructed from MIMIC-III, so only its decision spans appear. THYME is not shown: it distributes annotations with no note text.</div>
+<h2>Our synthetic corpus</h2>
+<dl class="card"><dt>What it is</dt><dd>1,917 LLM-generated outpatient notes, 4,965 typed follow-up items. Generated in two stages so the annotator cannot quote a span it invented; every quote round-trips to character offsets.</dd><dt>Annotation</dt><dd>action span, type (scheduled / unscheduled / conditional / recurring / titration), timing phrase, trigger phrase</dd><dt>Notes</dt><dd>Difficulty-gated: a dictionary-plus-regex control must score below 0.70. Realism distance from MTSamples 0.499.</dd></dl>
+<div class="meta">run1_00471 | gpt-4o-mini | 3 items | timing style: anchored to an event rather than to a duration</div>
+<pre>CHIEF COMPLAINT:  
+Follow-up visit for hypertension and fatigue.
+
+HISTORY OF PRESENT ILLNESS:  
+The patient is a 59-year-old male with a h/o uncontrolled hypertension, presenting for a f/u of his medication regimen. He reports feeling more fatigued lately, particularly after physical activity. He denies any chest pain, palpitations, or sudden weight changes. On review, he has been adherent to his medications, taking them as prescribed. The patient has also been monitoring his BP at home, with readings averaging around 150/95.
+
+REVIEW OF SYSTEMS:  
+CONSTITUTIONAL: Denies fever, weight loss.  
+CARDIOVASCULAR: No chest pain, no palpitations.  
+RESPIRATORY: No dyspnea, no cough.  
+GASTROINTESTINAL: Denies nausea, vomiting.  
+NEUROLOGICAL: No headaches, no dizziness.
+
+PAST MEDICAL HISTORY:  
+1. Hypertension, diagnosed 5 years ago.  
+2. Hyperlipidemia, managed with statins.  
+3. No other significant past medical history.
+
+MEDICATIONS:  
+1. Lisinopril 10 mg daily.  
+2. Atorvastatin 20 mg daily.  
+3. Aspirin 81 mg daily.  
+
+ALLERGIES:  
+No known drug allergies.
+
+SOCIAL HISTORY:  
+The patient is a non-smoker, consumes alcohol socially, and exercises three times a week. He works as a teacher.
+
+FAMILY HISTORY:  
+Father had a h/o cardiovascular disease, mother with diabetes.
+
+PHYSICAL EXAMINATION:  
+General: Well-nourished, in no acute distress.  
+Cardiovascular: Regular rate and rhythm, no murmurs.  
+Respiratory: Clear to auscultation bilaterally.  
+Abdomen: Soft, non-tender, no hepatosplenomegaly.  
+Extremities: No edema.
+
+VITAL SIGNS:  
+Weight: 180 lbs.  
+BP: 150/90.  
+HR: 76.  
+Temperature: 98.6°F.
+
+LABORATORY DATA:  
+CBC and CMP done last visit are within normal limits. Lipid panel shows elevated LDL.
+
+IMPRESSION:  
+1. Uncontrolled hypertension, likely due to suboptimal dosage of current medication.  
+2. Fatigue, possibly secondary to hypertension or medication effects.
+
+ASSESSMENT AND PLAN:  
+I will increase the lisinopril dosage to 20 mg daily and monitor his BP closely. The patient is to <mark class="act" title="conditional | time=None">return if the fatigue worsens, particularly if he starts experiencing dizziness or syncope</mark>. We will arrange a repeat BP check in the office at his <mark class="act" title="scheduled | time=in 4 weeks">next visit</mark>, which I suggest we make in 4 weeks. Additionally, I have referred him to the dietitian for guidance on sodium reduction and healthy meal planning. I will also ask him to continue his home BP monitoring and bring records to the next appointment.
+
+DISPOSITION:  
+<mark class="act" title="scheduled | time=on December 7th">Follow up with me</mark> on December 7th, and please call the office sooner if you have concerns.</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">scheduled</td><td>next visit</td><td>in 4 weeks</td><td>&mdash;</td></tr>
+<tr><td class="t">conditional</td><td>return if the fatigue worsens, particularly if he starts experiencing dizziness or syncope</td><td>&mdash;</td><td>if the fatigue worsens, particularly if he starts experiencing dizziness or syncope</td></tr>
+<tr><td class="t">scheduled</td><td>Follow up with me</td><td>on December 7th</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">run2_00610 | gpt-4o-mini | 3 items | timing style: a round clinical interval stated casually</div>
+<pre>CHIEF COMPLAINT:  
+Patient presents for follow-up of abdominal pain.
+
+HISTORY OF PRESENT ILLNESS:  
+The patient is a 54-year-old male with a h/o GERD. He reports ongoing intermittent abdominal pain, mostly postprandial. The pain is mild to moderate, rated 4 out of 10, and improves with antacids. No change in bowel habits reported. He denies weight loss or early satiety. 
+
+REVIEW OF SYSTEMS:  
+Constitutional: No fevers or chills.  
+Gastrointestinal: Positive for pain, negative for nausea or vomiting.  
+Cardiovascular: Denies chest pain or palpitations.  
+
+PAST MEDICAL HISTORY:  
+H/o hypertension and hyperlipidemia. No surgeries. 
+
+MEDICATIONS:  
+Omeprazole 20 mg daily, atorvastatin 40 mg daily, lisinopril 10 mg daily. 
+
+ALLERGIES:  
+Penicillin.
+
+SOCIAL HISTORY:  
+No tobacco use, drinks alcohol socially. Works as an accountant. 
+
+FAMILY HISTORY:  
+Father had a h/o colon cancer, mother with diabetes.
+
+PHYSICAL EXAMINATION:  
+Abdomen soft, non-tender, normal bowel sounds. No distension noted. 
+
+VITAL SIGNS:  
+BP 130/80, HR 72, Temp 98.6°F.
+
+LABORATORY DATA:  
+CBC and CMP performed last visit were within normal limits. 
+
+IMPRESSION:  
+Persistent abdominal pain likely related to GERD. 
+
+ASSESSMENT AND PLAN:  
+1. Continue omeprazole, consider increasing to 40 mg daily if symptoms persist.  
+2. <mark class="act" title="scheduled | time=on April 22">Follow up with gastrointestinal clinic</mark> on April 22 for possible endoscopy if no improvement.  
+3. <mark class="act" title="conditional | time=None">Return</mark> if the pain worsens significantly; trigger_quote: &quot;if the pain worsens.&quot;  
+4. Dietary modifications and <mark class="act" title="recurring | time=over the next few weeks">monitor the response over the next few weeks</mark>.  
+
+DISPOSITION:  
+Schedule follow-up appointment; educate on dietary changes. Patient advised to return sooner if needed.</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">scheduled</td><td>Follow up with gastrointestinal clinic</td><td>on April 22</td><td>&mdash;</td></tr>
+<tr><td class="t">conditional</td><td>Return</td><td>&mdash;</td><td>if the pain worsens</td></tr>
+<tr><td class="t">recurring</td><td>monitor the response over the next few weeks</td><td>over the next few weeks</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">run2_00394 | gpt-4.1 | 9 items | timing style: a range rather than a point</div>
+<pre>CHIEF COMPLAINT:  
+Shortness of breath.
+
+HISTORY OF PRESENT ILLNESS:  
+The patient is a 56-year-old female who presents today complaining of progressive shortness of breath, now occurring even with minimal exertion. She reports this has gradually worsened over the past 4 months, but has been much more noticeable during the last 2 weeks. She denies chest pain, palpitations, hemoptysis, or syncope. There has also been mild swelling of the ankles for about 3 months, though that has not changed much in severity. Previously, she was able to walk several blocks without difficulty.
+
+REVIEW OF SYSTEMS:  
+No cough or wheezing. Denies fever or chills. No recent weight loss. Admits mild orthopnea for 2 months, requiring two pillows at night. No headaches or visual changes. No dizziness, presyncope, or nocturnal dyspnea.
+
+PAST MEDICAL HISTORY:  
+Hypertension. Type 2 diabetes, diagnosed 5 years ago. Former tobacco use, quit in 2018. Hyperlipidemia.
+
+MEDICATIONS:  
+Metformin 500 mg BID, lisinopril 20 mg daily, atorvastatin 20 mg nightly, low-dose aspirin.
+
+ALLERGIES:  
+Penicillin—rash.
+
+SOCIAL HISTORY:  
+The patient works as an elementary school librarian. No occupational exposures. No current alcohol or tobacco use. Lives with husband.
+
+VITAL SIGNS:  
+BP 132/78, HR 88, RR 18, Temp 98.6°F, SpO2 97% on room air.
+
+PHYSICAL EXAMINATION:  
+Alert, NAD. Lungs: bibasilar crackles, no wheezes. Cardiac: regular rhythm, normal S1/S2, no murmur, JVP just above the sternal angle. 1+ bilateral pitting edema in ankles. Abdomen non-tender, no hepatosplenomegaly.
+
+LABORATORY DATA:  
+CBC and CMP from last week showed normal white count, mildly elevated creatinine at 1.4. BNP pending from today. Prior EKG showed normal sinus rhythm. No prior echocardiogram on record.
+
+IMPRESSION:  
+56-year-old woman with gradually worsening exertional dyspnea and peripheral edema, concerning for possible new onset heart failure. Hypertension and diabetes are contributing risk factors.
+
+ASSESSMENT AND PLAN:  
+1. Order a <mark class="act" title="scheduled | time=any time between now and the end of July">transthoracic echo</mark> to evaluate LV function and structure; schedule for the next available slot, which could be any time between now and the end of July.  
+2. Will arrange baseline CXR this afternoon to assess for pulmonary congestion or alternative etiologies.  
+3. Adjust antihypertensive regimen as discussed; the patient will <mark class="act" title="titration | time=start tomorrow morning">increase lisinopril to 30 mg daily</mark>, start tomorrow morning. <mark class="act" title="recurring | time=for the next two weeks">Monitor BP at home daily</mark> for the next two weeks.  
+4. <mark class="act" title="recurring | time=None">Monitor daily weights</mark> and instruct the patient to <mark class="act" title="conditional | time=None">contact the office</mark> if increase exceeds 2 pounds in a 24-hour period, beginning today.  
+5. Will <mark class="act" title="scheduled | time=by Friday">call patient with BNP and CXR results</mark> by Friday; <mark class="act" title="conditional | time=None">discuss further modifications</mark> based on findings.  
+6. Patient will <mark class="act" title="scheduled | time=either before the first week of August">return to clinic for office follow-up with cardiopulmonary team</mark> either before the first week of August or sooner if symptoms worsen. No repeat lab work required prior to that visit unless symptoms accelerate.  
+Of note, when seen in the ED 10 months ago for unrelated abdominal pain, no heart failure was documented at that time.
+
+DISPOSITION:  
+Patient is stable to discharge home, with instructions above. No new driving restrictions. All phone numbers verified.</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">scheduled</td><td>transthoracic echo</td><td>any time between now and the end of July</td><td>&mdash;</td></tr>
+<tr><td class="t">titration</td><td>increase lisinopril to 30 mg daily</td><td>start tomorrow morning</td><td>&mdash;</td></tr>
+<tr><td class="t">recurring</td><td>Monitor BP at home daily</td><td>for the next two weeks</td><td>&mdash;</td></tr>
+<tr><td class="t">recurring</td><td>Monitor daily weights</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">conditional</td><td>contact the office</td><td>&mdash;</td><td>if increase exceeds 2 pounds in a 24-hour period</td></tr>
+<tr><td class="t">scheduled</td><td>call patient with BNP and CXR results</td><td>by Friday</td><td>&mdash;</td></tr>
+<tr><td class="t">conditional</td><td>discuss further modifications</td><td>&mdash;</td><td>based on findings</td></tr>
+<tr><td class="t">scheduled</td><td>return to clinic for office follow-up with cardiopulmonary team</td><td>either before the first week of August</td><td>&mdash;</td></tr>
+<tr><td class="t">conditional</td><td>return to clinic for office follow-up with cardiopulmonary team</td><td>&mdash;</td><td>if symptoms worsen</td></tr>
+</table>
+<h2>ACI-Bench</h2>
+<dl class="card"><dt>What it is</dt><dd>207 notes, 489 items. NOT real clinical records: encounters are simulated, and the notes were drafted by an automatic note-generation system then rewritten by physicians and medical scribes (Yim et al., Sci Data 10:586, 2023). CC BY 4.0.</dd><dt>Annotation</dt><dd>annotated BY US with the same schema; both annotators were models, agreeing at Cohen&#x27;s kappa 0.593</dd><dt>Notes</dt><dd>Transcript-derived narrative: essentially no uppercase section headers (0.45/note against our 13.1).</dd></dl>
+<div class="meta">acibench_D2N116 | 3 items</div>
+<pre>CHIEF COMPLAINT
+
+Right shoulder pain.
+
+HISTORY OF PRESENT ILLNESS
+
+Bobby Flores is a 56-year-old male, right-hand-dominant, male who presents to the clinic today for the evaluation of right shoulder pain.
+
+The onset of his pain began a few weeks ago, when he was performing different projects in his backyard. He states that he was sore all over the next couple of days. He locates his pain to the lateral aspect of his right shoulder. His pain is aggravated with movement. The patient denies any restriction with his arm. He also reports pain at night when he sleeps on his right side. The patient denies any numbness in his arm or hands. He has been taking Advil and icing his shoulder, which provides some relief. The patient reports a history of right shoulder pain when he was younger while playing baseball.
+
+The patient also has complaints of bilateral foot and ankle pain. He attributes this pain to the yard work he has been doing. For treatment, he has iced and elevated them, which provided some relief.
+
+REVIEW OF SYSTEMS
+
+Musculoskeletal: Positive for right shoulder pain.
+Neurological: Negative for numbness in hands.
+
+VITALS
+
+Temperature: 97.8 degrees F.
+Heart Rate: 62 BPM.
+Respirations:16.
+Blood pressure: 116/84 mm Hg.
+Oxygen saturation: 99 percent on room air.
+
+PHYSICAL EXAM
+
+CV: &gt;Capillary refill is less than 3 seconds.
+NEURO: Normal sensation. Neurovascularly intact on the right. Sensation to touch is intact on the right shoulder.
+MSK: Examination of the right shoulder: Limited active and passive ROM. Tenderness at the greater tuberosity of the humerus. No tenderness at the sternoclavicular or AC joints. Good hand grip.
+
+RESULTS
+
+3 views of the right shoulder were taken. These reveal no fracture or dislocation. No abnormalities noted.
+
+ASSESSMENT
+
+1. Right shoulder rotator cuff tendinopathy.
+2. Bilateral foot pain.
+
+PLAN
+
+After reviewing the patient&#x27;s examination and radiographic findings today, I have had a lengthy discussion with the patient in regards to his current symptoms. I have explained to him that his x-rays did not reveal any signs of a fracture. I have recommended that we obtain an <mark class="act" title="unscheduled | time=None">MRI of the right shoulder</mark> to evaluate for a possible rotator cuff tear. I have also recommended that the patient attend formal <mark class="act" title="recurring | time=for 6 to 8 weeks">physical therapy</mark> for 6 to 8 weeks. He can continue taking Tylenol as needed for pain. If his symptoms do not improve with physical therapy, I will recommend a <mark class="act" title="conditional | time=None">cortisone injection</mark>.
+
+In regards to his bilateral feet pain, I have recommended that we treat the patient conservatively. I am recommending the patient soak his feet in an Epsom salt soak as well as elevate as needed.
+</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">unscheduled</td><td>MRI of the right shoulder</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">recurring</td><td>physical therapy</td><td>for 6 to 8 weeks</td><td>&mdash;</td></tr>
+<tr><td class="t">conditional</td><td>cortisone injection</td><td>&mdash;</td><td>If his symptoms do not improve with physical therapy</td></tr>
+</table>
+<div class="meta">acibench_D2N005 | 1 items</div>
+<pre>CC:
+
+Right middle finger pain.
+
+HPI:
+
+Ms. Hill is a 41-year-old female who presents today for an evaluation of right middle finger pain after she was rear-ended in a motor vehicle accident. She has no other injuries.
+
+CURRENT MEDICATIONS:
+
+Digoxin
+
+PAST MEDICAL HISTORY:
+
+Atrial Fibrillation
+
+EXAM
+
+Examination of the right middle finger shows tenderness over the distal phalanx.
+
+RESULTS
+
+X-rays of the right middle finger, 3 views obtained on today&#x27;s visit shows a comminuted distal phalanx fracture.
+
+IMPRESSION
+
+Right middle finger distal phalanx fracture.
+
+PLAN
+
+At this point, I discussed the diagnosis and treatment options with the patient. I recommend a prescription for Tramadol 50 mg every 6 hours as needed for pain, dispense 8. She is provided a finger splint and will return in 2 weeks for a <mark class="act" title="scheduled | time=in 2 weeks">follow-up x-ray</mark>. All questions were answered.
+</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">scheduled</td><td>follow-up x-ray</td><td>in 2 weeks</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">acibench_D2N027 | 10 items</div>
+<pre>CHIEF COMPLAINT
+
+Routine follow up of chronic medical conditions.
+
+HISTORY OF PRESENT ILLNESS
+
+Mr. Eugene Walker is a 61-year-old male who presents today for a routine follow-up of his chronic medical conditions.
+
+Today, the patient reports feeling more fatigued as of late. He notes that he usually rides his bike for about 20 to 30 miles and by the end of his ride he is tired enough that he will immediately fall asleep. The patient adds that he can fall asleep easily and gets about 6 or 7 hours of sleep per night. He believes he snores a bit but denies any signs of apnea.
+
+Of note, the patient underwent an aortic valve replacement and ascending aortic aneurysm repair on 01/22/2013. As he is now 8 years post-op, he has requested an <mark class="act" title="unscheduled | time=None">echocardiogram</mark> from Dr. Lewis to review how he is doing currently. His last <mark class="act" title="unscheduled | time=None">stress test</mark> was performed on 09/09/2019.
+
+Mr. Walker reports that his wife and friends have told him that he has pursed lips when he walks. This has also been noticed by his other providers. He denies any wheezing.
+
+Furthermore, the patient has noticed a 2 to 3 mm nodule in his right testicle, possibly with the epididymis but he is unsure. He has not had a vasectomy.
+
+His current medication list only consists of clindamycin prior to dental procedures and vitamin D3 (50,000 IU on Sundays and 2000 IU the other 6 days).
+
+From a preventative standpoint, the patient is due for the <mark class="act" title="scheduled | time=next month">shingles vaccine</mark> and an MMR titer. He is fully vaccinated for COVID-19 with his first dose on 01/15/2021 and his second dose on 02/05/2021.
+
+PHYSICAL EXAM
+
+Respiratory
+Pursed lip breathing noted. The exhalation phase is low. Lungs are clear to auscultation, no wheezing.
+
+Genitourinary
+No hernia noted. Left testicle normal.
+
+RESULTS
+
+Regarding his blood work from 04/10/2021, the patient&#x27;s <mark class="act" title="unscheduled | time=None">alkaline phosphatase</mark> was elevated at 156. His lipid panel showed elevated total cholesterol of 247, HDL 66, LDL 166, and triglycerides 74. The patient&#x27;s TSH was normal at 2.68. His CBC was unremarkable. His most recent vitamin D level was at the high end of normal at 94.
+
+ASSESSMENT
+
+• History of aortic aneurysm repair.
+• Elevated alkaline phosphate level.
+• Lung field abnormal finding on examination.
+• Right testicular nodule.
+• Preventative health.
+
+PLAN
+
+Mr. Eugene Walker is a 61-year-old male who presents today for a routine follow-up of his chronic medical conditions.
+
+History of aortic aneurysm repair.
+- Overall, he is doing well and currently asymptomatic.
+- Currently he is not seen by cardiology routinely and I have suggested he <mark class="act" title="unscheduled | time=None">follow up with Dr. Tyler Sanchez</mark>.
+- Ordered echocardiogram and stress test.
+
+Elevated alkaline phosphate level.
+- Most recent CMP showed elevation at 156 IU/L.
+- This could be related to his liver but most likely related to his bone health.
+- Ordered an alkaline phosphatase and <mark class="act" title="unscheduled | time=None">gamma GT</mark>.
+
+Lung field abnormal finding on examination.
+- The patient has been noted to purse his lips while breathing.
+- He had found himself feeling more fatigued at the end of the day.
+- He does cycle 20 to 30 miles at a time.
+- His exhalation phase was low on exam.
+- Ordered <mark class="act" title="unscheduled | time=None">pulmonary function testing</mark> for further evaluation.
+
+Right testicular nodule.
+- 2 to 3 mm nodule noted on exam. There is no palpable hernia.
+- Referral placed to <mark class="act" title="unscheduled | time=None">urology</mark> for possible ultrasound.
+
+Preventative health.
+- Most recent blood work reviewed with no significant abnormalities.
+- He is fully vaccinated against COVID-19.
+- Recommend shingles vaccine next month.
+- MMR titer performed today.
+
+INSTRUCTIONS
+
+- <mark class="act" title="scheduled | time=in 1 year">Return</mark> in 1 year for routine wellness visit, sooner if needed.
+- Call with any questions or concerns.
+</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">unscheduled</td><td>follow up with Dr. Tyler Sanchez</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">unscheduled</td><td>echocardiogram</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">unscheduled</td><td>stress test</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">unscheduled</td><td>alkaline phosphatase</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">unscheduled</td><td>gamma GT</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">unscheduled</td><td>pulmonary function testing</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">unscheduled</td><td>urology</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">scheduled</td><td>shingles vaccine</td><td>next month</td><td>&mdash;</td></tr>
+<tr><td class="t">scheduled</td><td>Return</td><td>in 1 year</td><td>&mdash;</td></tr>
+<tr><td class="t">conditional</td><td>Return</td><td>&mdash;</td><td>sooner if needed</td></tr>
+</table>
+<h2>MTSamples</h2>
+<dl class="card"><dt>What it is</dt><dd>40 annotated notes of 91 items, from real transcribed medical dictation across specialties. The most genuinely real text we hold, and the realism reference the corpus gate scores against.</dd><dt>Annotation</dt><dd>PRE-SCHEMA: action span plus a period_text timing phrase. No type field, so we report only detection and timed resolution on it; deriving a type from the timing and then scoring type accuracy against it would be circular.</dd><dt>Notes</dt><dd>Sectioned dictation: 7.9 uppercase headers per note.</dd></dl>
+<div class="meta">2180 | Orthopedic | 2 items</div>
+<pre>REASON FOR VISIT: , Kyphosis.,HISTORY OF PRESENT ILLNESS: , The patient is a 13-year-old new patient is here for evaluation of thoracic kyphosis.  The patient has a family history in a maternal aunt and grandfather of kyphosis.  She was noted by her parents to have round back posture.  They have previously seen another orthopedist who recommended observation at this time.  She is here for a second opinion in regards to kyphosis.  The patient denies any pain in her back or any numbness, tingling, or weakness in her upper or lower extremities.  No problems with her bowels or bladder.,PAST MEDICAL HISTORY: , None.,PAST SURGICAL HISTORY: , Bilateral pinning of her ears.,SOCIAL HISTORY:  ,She is currently an eighth grader at Middle School and is interested in basketball.  She lives with both of her parents and has a 9-year-old brother.  She had menarche beginning in September.,FAMILY HISTORY:  ,Of kyphosis in great grandmother and second cousin.,REVIEW OF SYSTEMS: , She is in her usual state of health and is negative except otherwise as mentioned in the history of present illness.,MEDICATIONS: , She is currently on Zyrtec, Flonase, and Ceftin for an ear infection.,ALLERGIES: , No known drug allergies.,FINDINGS: , On physical exam, she is alert, oriented, and in no acute distress standing 63 inches tall.  In regards to her back, her skin is intact with no rashes, lesions, and/or no dimpling or hair spots.  No cafe au lait spots.  She is not tender to palpation from her occiput to her sacrum.  There is no evidence of paraspinal muscle spasm.  On forward bending, there is a mild kyphosis.  She is not able to touch her toes indicating her hamstring tightness.  She has a full 5 out of 5 in all muscle groups.  Her lower extremities including iliopsoas, quadriceps, gastroc-soleus, tibialis anterior, and extensor hallucis longus.  Her sensation intact to light touch in L1 through L2 dermatomal distributions.  She has symmetric limb lengths as well bilaterally from both the coronal and sagittal planes.,X-rays today included PA and lateral sclerosis series.  She has approximately 46 degree kyphosis.,ASSESSMENT: , Kyphosis.,PLANS:  ,The patient&#x27;s kyphosis is quite mild.  While this is likely in the upper limits of normal or just it is normal for an adolescent and still within normal range as would be expected return at home.  At this time, three options were discussed with the parents including observation, physical therapy, and bracing.  At this juncture, given that she has continued to grow, they are Risser 0.  She may benefit from continued observation with physical therapy, bracing would be a more aggressive option certainly that thing would be lost with following at this time.  As such, she was given a prescription for <mark class="act" title="period=None">physical therapy for extension based strengthening exercises</mark>, flexibility range of motion exercises, postural training with no forward bending.  We will see her back in 3 months&#x27; time for <mark class="act" title="period=in 3 months&#x27; time">repeat radiographs</mark> at that time including PA and lateral standing of scoliosis series.  Should she show evidence of continued progression of her kyphotic deformity, discussions of bracing would be held at time.  We will see her back in 3 months&#x27; time for repeat evaluation.</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">(no type in gold)</td><td>repeat radiographs</td><td>in 3 months&#x27; time</td><td>&mdash;</td></tr>
+<tr><td class="t">(no type in gold)</td><td>physical therapy for extension based strengthening exercises</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">1344 | SOAP / Chart / Progress Notes | 1 items</div>
+<pre>She is stable at this time and does not require any intervention at today&#x27;s visit.  I have asked her to return in six months&#x27; for a <mark class="act" title="period=in six months">followup dilated examination</mark>, but would be happy to see her sooner should you or she notice any changes in her vision.</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">(no type in gold)</td><td>followup dilated examination</td><td>in six months</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">4320 | Consult - History and Phy. | 7 items</div>
+<pre>PROBLEMS LIST:,1.  Nonischemic cardiomyopathy.,2.  Branch vessel coronary artery disease.,3.  Congestive heart failure, NYHA Class III.,4.  History of nonsustained ventricular tachycardia.,5.  Hypertension.,6.  Hepatitis C.,INTERVAL HISTORY: , The patient was recently hospitalized for CHF exacerbation and was discharged with increased medications.  However, he did not fill his prescriptions and came back with persistent shortness of breath on exertion and on rest.  He has history of orthopnea and PND.  He has gained a few pounds of weight but denied to have any palpitation, presyncope, or syncope.,REVIEW OF SYSTEMS: , Positive for right upper quadrant pain.  He has occasional nausea, but no vomiting.  His appetite has decreased.  No joint pain, TIA, seizure or syncope.  Other review of systems is unremarkable.,I reviewed his past medical history, past surgical history, and family history.,SOCIAL HISTORY: , He has quit smoking, but unfortunately was positive for cocaine during last hospital stay in 01/08.,ALLERGIES: , He has no known drug allergies.,MEDICATIONS:,  I reviewed his medication list in the chart.  He states he is compliant, but he was not taking the revised dose of medications as per discharge orders and prescription.,PHYSICAL EXAMINATION:,VITAL SIGNS:  Pulse 91 per minute and regular, blood pressure 151/102 in the right arm and 152/104 in the left arm, weight 172 pounds, which is about 6 pounds more than last visit in 11/07.  HEENT:  Atraumatic and normocephalic.  No pallor, icterus or cyanosis.  NECK:  Supple.  Jugular venous distention 5 cm above the clavicle present.  No thyromegaly.  LUNGS:  Clear to auscultation.  No rales or rhonchi.  Pulse ox was 98% on room air.  CVS:  S1 and S2 present.  S3 and S4 present.  ABDOMEN:  Soft and nontender.  Liver is palpable 5 cm below the right subcostal margin.  EXTREMITIES:  No clubbing or cyanosis.  A 1+ edema present.,ASSESSMENT AND PLAN:,  The patient has hypertension, nonischemic cardiomyopathy, and branch vessel coronary artery disease.  Clinically, he is in NYHA Class III.  He has some volume overload and was not unfortunately taking Lasix as prescribed.  I have advised him to take <mark class="act" title="period=None">Lasix 40 mg p.o. b.i.d.</mark>  I also increased the dose of <mark class="act" title="period=None">hydralazine from 75 mg t.i.d. to 100 mg t.i.d.</mark>  I advised him to continue to take Toprol and lisinopril.  I have also added <mark class="act" title="period=None">Aldactone 25 mg p.o. daily</mark> for survival advantage.  I reinforced the idea of not using cocaine.  He states that it was a mistake, may be somebody mixed in his drink, but he has not intentionally taken any cocaine.  I encouraged him to find a primary care provider.  He will come for a <mark class="act" title="period=in one week">BMP check</mark> in one week.  I asked him to check his blood pressure and weight.  I discussed medication changes and gave him an updated list.  I have asked him to <mark class="act" title="period=None">see a gastroenterologist for hepatitis C</mark>.  At this point, his Medicaid is pending.  He has no insurance and finds hard to find a primary care provider.  I will <mark class="act" title="period=in one month">see him</mark> in one month.  He will have his <mark class="act" title="period=in one week">fasting lipid profile</mark>, AST, and ALT checked in one week.</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">(no type in gold)</td><td>BMP check</td><td>in one week</td><td>&mdash;</td></tr>
+<tr><td class="t">(no type in gold)</td><td>fasting lipid profile</td><td>in one week</td><td>&mdash;</td></tr>
+<tr><td class="t">(no type in gold)</td><td>Lasix 40 mg p.o. b.i.d.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">(no type in gold)</td><td>hydralazine from 75 mg t.i.d. to 100 mg t.i.d.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">(no type in gold)</td><td>Aldactone 25 mg p.o. daily</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">(no type in gold)</td><td>see a gastroenterologist for hepatitis C</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">(no type in gold)</td><td>see him</td><td>in one month</td><td>&mdash;</td></tr>
+</table>
+<h2>PriMock57</h2>
+<dl class="card"><dt>What it is</dt><dd>57 real UK primary-care consultation notes written by clinicians during mock consultations with actors. Median 755 characters. The register furthest from our corpus: dense shorthand.</dd><dt>Annotation</dt><dd>NONE. No follow-up annotation exists; using it means annotating it. Note the UK duration shorthand (3/7 = three days, 2/52 = two weeks), which our normalizer currently misreads as US calendar dates.</dd><dt>Notes</dt><dd>Unused so far.</dd></dl>
+<div class="meta">day2_consultation09 | I can&#x27;t move my left arm</div>
+<pre>Hx:  Difficulty moving left arm, occurred upon waking this morning
+Feels no pain, but still can&#x27;t move it
+No previous similar episodes
+Slept as per normal last night
+No discolouration in hand, arm doesn&#x27;t feel cold
+Symptoms limited to left arm, not in left leg
+Tingling present on left side of face over the same period (1 hour)
+Patient has not noticed any facial asymmetry
+Difficulty swallowing water- dribbled water
+Speech seems ‘harder&#x27; or ‘slow&#x27;
+No-one at home with patient
+Pmhx: T2dm, HTN
+DH: metformin, losartan, amlodipine
+Allergic to penicillin
+FH: father hs ‘heart disease&#x27;
+SH: lives alone, ex smoker, mild- moderate alcohol intake.
+Imp: ? CVA
+LAS called- blue light, pt to keep front door open, will stay on line till LAS arrives and hand over.
+</pre>
+<p class="none">No annotation in this corpus.</p>
+<div class="meta">day3_consultation08 | I have a cough and a cold</div>
+<pre>History : 
+Cough and cold for 5 days 
+Cough is dry, no sputum , no blood
+No wheeze 
+No breathlessness 
+Used paracetamol 
+Diabetic and high blood pressure since 5-6 years
+Medication: metformin, lisinopril
+Sugar levels and BP normal today 
+Diagnosis: Upper respiratory tract infection
+Plan : . advised to use night and day nurse. If there is breathlessness, wheezying or cough more than 3 weeks to call back
+</pre>
+<p class="none">No annotation in this corpus.</p>
+<div class="meta">day1_consultation01 | I&#x27;ve been having really bad diarrhea for the last 3 days</div>
+<pre>3/7 hx of diarrhea, mainly watery. No blood in stool. Opening bowels x6/day. Associated LLQ pain - crampy, intermittent, nil radiation.  Also vomiting - mainly bilous. No blood in vomit. Fever on first day, nil since. Has been feeling lethargic and weak since. 
+
+Takeaway 4/7 ago - Chinese restaurant. Wife and children also unwell with vomiting, but no diarrhea. No other unwell contacts. 
+
+PMH: Asthma
+DH: Inhalers
+SH: works as an accountant. Lives with wife and children. Affecting his ADLs as has to be near toilet often. 
+Nil smoking/etOH hx
+
+Imp: gastroenteritis 
+
+Plan:
+Conservative management - rest, push fluids, paracetamol if feverish. Recommend OTC diarolyte. To review in 3-5d if symptoms not improving. To see earlier if feeling more unwell. 
+</pre>
+<p class="none">No annotation in this corpus.</p>
+<h2>Asclepius</h2>
+<dl class="card"><dt>What it is</dt><dd>158,114 rows of synthetic clinical notes generated from public PMC case reports. CC-BY-NC-SA-4.0. 83% of notes mention follow-up. Downloaded, unused.</dd><dt>Annotation</dt><dd>QA PAIRS, not spans. Eight task families including Temporal Information Extraction. Not usable as gold for span extraction, but a licence-clear pool of notes to annotate.</dd><dt>Notes</dt><dd>Unused so far.</dd></dl>
+<div class="meta">1139 | task: Temporal Information Extraction</div>
+<pre>Hospital Course:
+The patient presented to the clinic with a chief complaint of left knee pain. She previously consulted with an outside physician who prescribed carbamazepine, prednisone, and ibuprofen, which failed to relieve her pain. Upon consultation, the patient reported left knee pain, fatigue, and bilateral lower limb cramps. Physical examination revealed mild facial edema, hypertrophy of the calves, and multiple port-wine stains on her upper and lower extremities. Imaging and routine blood studies were ordered, and the patient was sent to the emergency department to correct electrolyte imbalances.
+
+Diagnosis:
+The patient was diagnosed with syndrome of inappropriate antidiuretic hormone secretion secondary to carbamazepine use, hypokalemia secondary to corticosteroid therapy, and Klippel-Trénaunay-Weber syndrome.
+
+Treatment:
+The patient was given orders to discontinue carbamazepine, limit fluid intake to 1.5 L/day, and receive intravenous potassium slow correction. She was also given acetaminophen and a local nonsteroidal anti-inflammatory drug cream to manage her left knee pain. After three days, the patient was discharged with improved electrolyte levels.
+
+Follow-up:
+The patient was seen in the office one week after discharge. She reported no longer feeling fatigued and cramps being absent. Her left knee pain had mildly improved. Electrolyte studies revealed normal sodium and potassium levels.
+
+Summary:
+The patient presented to the clinic with left knee pain, fatigue, and bilateral lower limb cramps. She was diagnosed with syndrome of inappropriate antidiuretic hormone secretion secondary to carbamazepine use, hypokalemia secondary to corticosteroid therapy, and Klippel-Trénaunay-Weber syndrome. She received orders to discontinue carbamazepine, limit fluid intake, and receive intravenous potassium slow correction. After being discharged, the patient reported improved symptoms.</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">Q</td><td>What was the patient&#x27;s diagnosis, and what were the secondary causes for their syndrome of inappropriate antidiuretic hormone secretion and hypokalemia?</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">A</td><td>The patient was diagnosed with syndrome of inappropriate antidiuretic hormone secretion secondary to carbamazepine use and hypokalemia secondary to corticosteroid therapy. The underlying condition of Klippel-Trénaunay-Weber syndrome may have contributed to her symptoms but did not directly cause the hormonal and electrolyte imbalances.</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">336 | task: Temporal Information Extraction</div>
+<pre>Discharge Summary
+
+Admission Date: N/A
+Discharge Date: N/A
+
+Hospital Course:
+A 65-year-old female with non-small cell adenocarcinoma of the right middle lobe, status after right middle lobectomy and mediastinal node dissection, presented with elevated creatinine levels in March 2020. Her kidney biopsy revealed acute and chronic interstitial nephritis grade 3 and tubulitis. She was started on a prednisone 40mg taper and her creatinine improved. She was diagnosed with pembrolizumab-induced acute interstitial nephritis and was advised to stop the medication. She was discharged on a steroid taper. Her creatinine levels increased again once her pembrolizumab was resumed in July 2020, and the medication was discontinued indefinitely after discussion with her oncology team. She was discharged on a prednisone 10mg taper and followed up in the outpatient setting.
+
+Hospital Course: Complete</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">Q</td><td>What was the reason for the patient&#x27;s elevated creatinine levels and what medication caused acute interstitial nephritis?</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">A</td><td>The patient had elevated creatinine levels due to pembrolizumab-induced acute interstitial nephritis.</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">6 | task: Temporal Information Extraction</div>
+<pre>DISCHARGE SUMMARY:
+
+Patient Name: N/A
+Date of Discharge: N/A
+Admitting Physician: N/A
+Attending Physician: N/A
+Date of Admission: N/A
+Date of Discharge: N/A
+
+HOSPITAL COURSE:
+
+This 59-year-old female presented with dyspnea and an oxygen saturation level of 65%, leading to an immediate tracheal intubation due to moderate acute respiratory distress syndrome (ARDS) with reduced lung compliance. After being diagnosed, the patient was treated with deep sedation, neuromuscular blocking agents, and prone positioning. On day 14, a trial of sitting on the edge-of-bed (SOEB) was performed, resulting in a significant increase in the patient&#x27;s level of consciousness and collaborative state. The patient&#x27;s muscle strength indicated ICU-acquired weakness, with a Medical Research Council sum-score (MRC-SS) of 40/60. Despite the weakness, she was continuously encouraged to mobilize herself with exercises against gravity, and she was actively transferred to a chair each day. After successful extubation, she presented postextubation dysphagia, which was closely monitored for secretion management and cough stimulation. Physical rehabilitation was continued, and the patient started walking with a walking aid on day 19. Her oxygen desaturation during exercise training became evident at this point, and after 25 days, she was transferred to the institution&#x27;s rehabilitation facilities where she received further treatment.
+
+DISCHARGE DIAGNOSES:
+
+- Moderate acute respiratory distress syndrome (ARDS) with reduced lung compliance
+- Postextubation dysphagia
+- ICU-acquired weakness
+- Persistent physical function impairment
+
+PROCEDURES:
+
+- Immediate tracheal intubation
+- Sitting on the edge-of-bed (SOEB) trial
+- Continuous physical therapy
+- Successful extubation
+- Close monitoring for secretion management and cough stimulation
+- Walking with a walking aid
+
+SUMMARY OF CARE:
+
+This document serves as a summary of the hospital course of a 59-year-old female admitted due to dyspnea and diagnosed with moderate acute respiratory distress syndrome (ARDS) with reduced lung compliance. After treatment, a trial of sitting on the edge-of-bed (SOEB) was performed, resulting in the patient&#x27;s significant level of consciousness improvement. Despite experiencing ICU-acquired weakness, the patient was continuously encouraged to mobilize herself with exercises against gravity, and after successful extubation, physical rehabilitation was continued until she was able to walk with a walking aid. The patient was transferred to the institution&#x27;s rehabilitation facilities, where further treatment was administered to address her persistent physical function impairment.</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">Q</td><td>What interventions were used to treat the patient&#x27;s post-extubation dysphagia and how was it managed?</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">A</td><td>The discharge summary states that the patient&#x27;s postextubation dysphagia was closely monitored for secretion management and cough stimulation, but it does not provide specific interventions that were used to treat it. Therefore, the information available in the discharge summary is unanswerable to the healthcare professional&#x27;s instruction.</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<h2>CLIP</h2>
+<dl class="card"><dt>What it is</dt><dd>718 MIMIC-III discharge summaries, physician-annotated action items, 7 types. PhysioNet credentialed. The task is ours minus the timing. Surrogate generation kept realistic dates in the text rather than blanking them.</dd><dt>Annotation</dt><dd>character-level action spans, 7 types (Appointment, Lab, Medication, Procedure, Imaging, Patient Instructions, Other). NO timing annotation, which is exactly what a timing layer would add.</dd><dt>Notes</dt><dd>Inpatient discharge summaries. The strongest build target: the expensive half of the annotation already exists on real text.</dd></dl>
+<div class="meta">clip_19403 | 2 action items</div>
+<pre>Admission Date:  1990-02-26       Discharge Date:  1970-12-09
+
+Date of Birth:                    Sex:
+
+Service:  CCU #58
+
+CHIEF COMPLAINT:  Chest pain and abdominal pain.
+
+HISTORY OF PRESENT ILLNESS:  This is a [**Age over 90 **] year old female
+with no history of coronary artery disease.  She presented to
+an outside hospital at 10 p.m. on the evening of admission.
+ON the day prior to admission, she complained of nausea,
+vomiting, back/chest/abdominal pain.  Electrocardiogram at
+that point revealed anterior ST elevations.  The patient was
+treated initially with aspirin, intravenous Lopressor and
+morphine and Integrilin drip, heparin and then transferred to
+Holy Redeemer Hospital &amp; Medical Center for emergent
+catheterization.  Catheterization showed 100% lesion in the
+proximal left anterior descending with 70% lesion in her D-1,
+D-2.  Mild right coronary artery disease as well.  Proximal
+left anterior descending was successfully stented with first
+attempt, achieving TIMI-III flow.  However, catheterization
+was complicated by several episodes of ventricular
+fibrillation, requiring shock, following the placement of a
+PA catheter.  The patient was responsive to these shocks.
+
+Currently, post catheterization, the patient is comfortable
+on 100% non rebreather, responding to questions appropriately
+and reporting no pain at this point.
+
+PAST MEDICAL HISTORY:  1.  Osteoarthritis.  2. History of
+falls.  3. Status post right total hip replacement seven
+years ago.  4. Status post pelvic fracture five years ago.
+5. Polio as a child with residual left leg weakness.  6.
+Baseline walker.  7.  Diverticulitis.  8. Chronic abdominal
+distention.  9. Hard of hearing.  10. Hypothyroidism.
+
+MEDICATIONS:
+Levoxyl 50 mcg q. day.
+Lasix 30 mg q. day.
+Dulcolax.
+
+SOCIAL HISTORY:  She lives alone in 89861 Cooper Squares
+North Kayla, AZ 05706, independent
+living.  No tobacco or alcohol history.
+
+ALLERGIES:  No known drug allergies per record.
+
+PHYSICAL EXAMINATION:  On admission, her temperature was 96;
+blood pressure around 120/80; heart rate 100 to 110;
+respiratory rate of 18; 98% on room non rebreather.  In
+general, she was alert and oriented times two; alert to
+person and date, not oriented to location.  HEAD, EYES, EARS,
+NOSE AND THROAT:  JVP extended to jawline, supine.
+Cardiovascular examination was tachycardiac, regular rhythm.
+Lungs were clear to auscultation anteriorly.  Abdominal
+examination was soft, mildly distended, nontender.
+Extremities:  Trace amounts of edema.  She has Dopplerable
+dorsalis pedis and posterior tibial pulses bilaterally.
+Right groin had a line and her venous sheath was placed.
+
+LABORATORY DATA:   On admission, white count was 5,000;
+hematocrit of 33.4; platelets of 373.  Chemistries:  140;
+potassium of 3.7; chloride 101; bicarbonate 23; BUN 20;
+creatinine 1; glucose 146.  Liver function tests were normal.
+Cardiac enzymes revealed CK of 76, MB of 5.2; troponin was
+1.4 with normal index.  Arterial blood gases showed pH of
+7.331, PC02 of 34, P02 of 92.
+
+Electrocardiogram from the outside hospital shows right sinus
+rhythm with a rate of 80 beats per minute; significant for
+prominent ST elevations, approximately 5 to 6 mm in leads V2
+and V3. Gentle slight ST elevations of 1 to 2 mm in leads 1
+and AVL, with reciprocal ST depressions in leads 2, 3 and
+AVF.
+
+Cardiac catheterization shows left main coronary mild
+disease; left anterior descending shows occluded proximal
+with successful percutaneous transluminal coronary
+angioplasty stent, with 10% residual in left anterior
+descending.  Ultimate D-1 and D-2 where D-2 had a 70% mid
+stenosis at D-1, no change of occlusion.  60% lesion in mid
+obtuse marginal, left circumflex and right coronary artery
+had 50% disease.  Right sided filling pressures were unable
+to completely be obtained, secondary to complications of
+ventricular fibrillation with advancement of the pulmonary
+catheter.  Her RV pressure was 42 over 22. Unable to obtain
+cardiac pulmonary wedge, secondary to complications of
+ventricular fibrillation.
+
+Chest x-ray shows small bilateral effusions, left greater
+than right; mild congestive heart failure.
+
+Electrocardiogram post catheterization shows sinus
+tachycardia of 115; anterolateral T wave inversions with Q
+waves V2 with less than [**Street Address(2) 4793**] elevation; depressions in
+inferior leads.
+
+HOSPITAL COURSE:  1. Cardiovascular.  (a) Coronary artery
+disease:  The patient came in for anterior ST elevation
+myocardial infarction and underwent successful stenting of
+her left anterior descending.  Her CK&#x27;s ended up peaking at
+6,300 on 08-13. She was continued on Integrilin for 18
+hours post catheterization cannula and aspirin.  She was
+started on Lipitor and also started on beta blockade and ace
+inhibitor which were titrated up as her cardiovascular status
+tolerated.  Initially, it was planned to anticoagulate the
+patient in the setting of anterior myocardial infarction with
+likely resultant anterior akinesis and likely increased risk
+for thromboembolic events.  However, it was felt that the
+patient was an increased fall risk and would not be an ideal
+candidate for anticoagulation and, as such, heparin was
+discontinued.
+
+(b) Pump.  The patient underwent a right sided cardiac
+catheterization. Unfortunately, this was limited secondary to
+the patient undergoing ventricular fibrillation with
+advancement of pulmonary artery catheter into the left
+ventricle.  Based upon her elevated right atrial and
+ventricular pressures, it was felt that she was in mild over
+load.  She did receive 40 mg of intravenous Lasix in the
+cardiac catheterization laboratory and responded well with
+over a liter and a half of diuresis.  Subsequently, her
+oxygen requirements had decreased dramatically.  She did
+undergo an echocardiogram which showed an ejection fraction
+of 35%; mildly dilated left atrium; moderate to mild aortic
+regurgitation; mild mitral regurgitation and mild tricuspid
+regurgitation and pulmonary artery systolic function with
+overall moderately depressed left ventricular diastolic
+function, particularly anterior, septal, apical and distal
+inferior akinesis.
+
+As mentioned above, the patient had been started on gentle
+beta blockade and ace inhibitor.  As her cardiovascular
+status, her beta blockade was gently titrated given the fact
+that she presented with a mild congestive heart failure.
+Following her first hospital day, she had excellent diuresis
+in response to 40 mg of intravenous Lasix.  By this time, the
+patient was felt to be close to be euvolemic.  The patient
+had come in on standing p.o. Lasix 30 mg q. day.  At this
+point, the patient would likely benefit from a low dose
+standing Lasix although we must be careful to not over
+diurese this patient as she has shown the ability to not take
+in adequate amounts of p.o. enough to compensate for being
+diuresed.  <mark class="act" title="Medication-related followups">This dose may be altered and will be dictated at a
+later date.</mark>
+
+(c) Hemodynamics:  The patient remained hemodynamically
+stable during her hospital course in the CCU.  As mentioned
+above, she was started on gentle Ace inhibitor and beta
+blockade.
+
+(d) Rhythm:  The patient was admitted to CCU following
+ventricular fibrillation arrest, in the setting of having her
+pulmonary artery catheter advanced past her right ventricle.
+Once post catheterization, the patient did remain in sinus
+rhythm with occasional ectopy.
+
+2. Pulmonary:  As mentioned above, the patient had a chest
+x-ray with findings of bilateral pleural effusions,
+consistent with mild congestive heart failure. Her
+oxygenation improved dramatically with a brisk diuresis on
+hospital day number one, in response to intravenous Lasix.
+By the time of discharge, the patient was saturating in the
+mid 90&#x27;s on room air.
+
+3.  Gastrointestinal:  No active issues.  The patient was
+maintained on prophylaxis during her hospital course.
+
+4.  Hematology:  As mentioned above, it was felt that the
+patient was at a moderate to severe fall risk given her past
+medical history and, as such, would not be a good candidate
+for anticoagulation despite her recent anterior myocardial
+infarction.  Her hematocrit remained stable during her
+hospital course.
+
+5.  Infectious disease:  The patient was afebrile during her
+hospital course.
+
+6.  Renal:  The patient&#x27;s electrolytes and renal function
+remained stable during her hospital course.  As mentioned
+above, she had an excellent diuresis following intravenous
+Lasix.  <mark class="act" title="Medication-related followups">It was felt at the time of discahrge that the patient
+is nearing 07 and may benefit from long term low dose
+Lasix, only if we can ensure that the patient can compensate
+by taking in enough p.o., to avoid hypovolemia and possible
+renal insufficiency.</mark>
+
+7.  General:  It should be noted from this point that the
+patient has a presumed allergy to Phenergan.  On hospital day
+number three, the patient had received Phenergan in response
+to nausea. Subsequently, the patient would appear
+unresponsive with stable vital signs.  Her electrocardiogram,
+chest x-ray and electrolytes were all within normal limits.
+It was felt that Phenergan had triggered this reaction.
+
+Incomplete report -- cut off!
+
+
+
+                            Laurie Castaneda, M.D.  7105
+
+Dictated By:Thomas
+MEDQUIST36
+
+D:  1970-12-09  04:48
+T:  1970-12-09  05:16
+JOB#:  301
+
+
+
+</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">Medication-related followups</td><td>This dose may be altered and will be dictated at a
+later date.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Medication-related followups</td><td>It was felt at the time of discahrge that the patient
+is nearing 07 and may benefit from long term low dose
+Lasix, only if we can ensure that the patient can compensate
+by taking in enough p.o., to avoid hypovolemia and possible
+renal insufficiency.</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">clip_11785 | 1 action items</div>
+<pre>Admission Date:  1999-08-16       Discharge Date:  1989-08-04
+
+Date of Birth:   2017-09-09       Sex:  M
+
+Service:
+
+ADDENDUM:
+
+Since the previous discharge summary, the patient on
+1989-04-23, postoperative day thirty-four, had his nasogastric
+tube removed.  The patient was started on a full liquid diet
+also on 1989-04-23.  <mark class="act" title="Appointment-related followup">The patient had been seen by plastic
+surgery who wanted the patient to follow-up in three weeks
+for further evaluation of his sternal wound.</mark>  The patient&#x27;s
+Lopressor was changed from intravenous to p.o. dose of 12.5
+mg p.o. b.i.d.  The patient was discharged to rehabilitation
+in good condition taking a full liquid diet and on TPN on
+1989-08-04.
+
+
+
+
+                            [**First Name11 (Name Pattern1) **] Reynolds, M.D.  58446
+
+Dictated By:Romero
+MEDQUIST36
+
+D:  1996-06-17  14:00
+T:  1996-06-17  14:17
+JOB#:  759
+</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">Appointment-related followup</td><td>The patient had been seen by plastic
+surgery who wanted the patient to follow-up in three weeks
+for further evaluation of his sternal wound.</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">clip_34899 | 39 action items</div>
+<pre>Admission Date:  1974-10-15              Discharge Date:   1973-03-12
+
+Date of Birth:  2005-02-08             Sex:   M
+
+Service: NEUROSURGERY
+
+Allergies:
+Patient recorded as having No Known Allergies to Drugs
+
+Attending:Ronald
+Chief Complaint:
+loss of consciousness, R arm weakness, aphasia
+
+Major Surgical or Invasive Procedure:
+1993-01-09; Left Frontal Crani for Mass resection
+
+
+History of Present Illness:
+49 year old male from [**Country 5881**] with a history of metastatic renal
+cell renal cell CA s/p radical nephrectomy, got IL-2 in 08-29
+who presents with right sided paralysis and aphasia. He was at a
+hotel today and fell. He was then noted to have right sided
+weakness and facial droop. Per report he did not have any
+tonic-clonic motions, no tongue biting, no incontinence. He only
+remembers a strange feeling in his face and then waking up in
+the emergency room. The patient took dose of lovenox today in
+preparation of flying back to [**Country 5881**]. He was BIBA to The Ruby Valley Hospital as a
+code stroke. The patient currently notes some difficulty
+speaking and moving his right arm, both of which he states are
+improved since the ED. He denies any facial or extremity
+numbness or tingling.
+.
+In the ED, he was initially mute and had right sided arm
+weakness. He received a head CT and head MRI which showed a left
+frontal lobe lesion c/w metastatis with vasogenic edema. He was
+seen by neurology who thought he may have had a seizure rather
+than a stroke and recommened anti-epileptic and dexamethasone.
+He was loaded with dilantin and given dexamethasone 10mg IV. He
+was also seen by neurosurgery who did not think he needed
+surgical intervention. The neurosurgical team reccomended
+protamine to reverse lovenox. Over the course of his stay in the
+ED, he deficits began to correct with improvement in speech and
+improved strength in right arm.
+Vitals 98.1 112 134/94 16 96%3L NC
+.
+Of note, pt was recently discharge after left upper lobe VATS
+wedge resection by Dr. Rodriguez for an enlarging left upper
+lobe nodule, on 2018-06-26.
+
+
+Past Medical History:
+- RCC L kidney with pulmonary metastases diagnosed in 01/1997,
+s/p high dose IL-2 treatment x 2 cycles
+- stereotactic radiosurgery to brain met in 05-09
+- s/p radical L nephrectomy
+- IL-2-induced hypothyroidism
+- PE, DVT on enoxaparin SC s/p 9mo anticoagulation now just on
+lovenox with air travel
+
+
+Social History:
+lives in [**Country 5881**], energy trader, married; no tob/alcohol or
+illict drugs
+
+
+Family History:
+Mother with thyroid condition.
+Father with vascular disease, heart disease, died after a
+stroke.
+Maternal uncle with small cell lung cancer after &gt;120 pack-year
+history.
+
+
+Physical Exam:
+Exam on Admission:
+T-97.3 BP- 126/80 HR-86 RR- 22 O2Sat 97%RA
+Gen: sitting up in bed, in NAD
+HEENT: NC/AT, moist oral mucosa
+Neck: No tenderness to palpation, normal ROM, supple, no carotid
+or vertebral bruit
+Back: No point tenderness or erythema
+CV: RRR, Nl S1 and S2, no murmurs/gallops/rubs
+Lung: Clear to auscultation bilaterally
+aBd: +BS soft, nontender
+ext: no edema
+
+Exam on Discharge:
+Alert, oriented to person, place and date. Right facial droop.
+PERRL. EOMI. Pt is presently non-verbal. LUE and bilateral lower
+extremities are full strength. RUE is with weakness in the right
+hand (11-24), and 04-17 bicep weakness.
+
+Pertinent Results:
+1974-10-15 01:50PM   GLUCOSE-117* UREA N-14 CREAT-1.1 SODIUM-142
+POTASSIUM-3.8 CHLORIDE-102 TOTAL CO2-21* ANION GAP-23*
+1974-10-15 01:50PM   estGFR-Using this
+1974-10-15 01:50PM   WBC-10.5 RBC-5.12 HGB-14.8 HCT-43.9 MCV-86
+MCH-29.0 MCHC-33.8 RDW-12.4
+1974-10-15 01:50PM   PLT COUNT-519*
+1974-10-15 01:50PM   PLT COUNT-519*
+
+COMPLETE BLOOD COUNT   WBC RBC   Hgb   Hct   MCV MCH M CHC RDW
+Plt Ct
+1970-06-04 05:45AM    8.5 4.10* 12.3* 34.9* 85  30.0 35.3* 12.5
+337
+1978-08-28 06:55AM    8.5 4.18* 12.1* 34.6* 83  29.0 35.0 12.5
+317
+1986-11-21 07:10AM    12.4 4.10* 12.3* 34.8* 85 30.1 35.4* 12.5
+316
+
+RENAL &amp; GLUCOSE        Glucose UreaN Creat Na  K   Cl  HCO3
+AnGap
+1970-06-04 05:45AM    122*1   25*   0.8   137 3.8 101 26   14
+1978-08-28 06:55AM    124*1   23*   0.8   138 4.2 102 23   17
+1986-11-21 07:10AM    123*1   18   0.8    135 4.0 100 26   13
+
+1974-10-15: IMPRESSION: 1.5 cm enhancing lesion at the frontal left
+Ruiz-white matter junction with surrounding edema. The
+appearances are most suggestive of metastatic disease. No other
+foci of abnormal enhancement are seen.
+
+MRI Head 11-24:
+1.5 cm enhancing lesion at the frontal left Ruiz-white matter
+junction with surrounding edema. The appearances are most
+suggestive of metastatic disease. No other foci of abnormal
+enhancement are seen.
+
+Functional MRI 06-01:
+FINDINGS: There is an unchanged left frontal mass lesion with
+significant
+associated vasogenic edema previously demonstrated by MRI on
+1974-10-15. The functional MRI demonstrates the expected
+activation areas during the movement of the hands and feet,
+during the movement of the left hand, there is a possible
+supplementary area adjacent to the mass lesion versus venous
+contamination (601B:9). The functional MRI of the language
+demonstrates the major activation areas on the left cerebral
+hemisphere, likely related with dominance. During the movement
+of the tongue, there are activation areas surrounding the mass
+lesion posteriorly (1000:8) and apparently at less than 1 cm of
+distance from the mass lesion. The ASL sequence demonstrate avid
+pattern of perfusion within the mass, suggesting increased
+vascularity.
+IMPRESSION: The expected activation areas were demonstrated with
+BOLD
+functional MRI sequences. During the movement of the left hand,
+there is a
+possible supplementary area at the left frontal cortex versus
+venous
+contamination. During the movement of the tongue, there is an
+area of
+activation posterior to the mass lesion described in detail
+above. The ASL
+sequence demonstrates avid pattern of perfusion within the mass,
+suggesting hypervascularity.
+
+CT Head 06-01(post-op):
+NON-CONTRAST HEAD CT: The patient has undergone interval left
+frontotemporal craniotomy, with expected postoperative changes
+including soft tissue swelling and both intra- and extra-cranial
+gas. There is minimal high density overlying the left frontal
+mass resection site, which could represent small amount of blood
+products (2:20). There is also tiny amount of high density
+remaining in the resection bed (2:21) which could represent
+either new blood product or hyperdense material remaining from
+previously seen hyperdense mass. Large amount of surrounding
+vasogenic edema has not changed, causing local sulcal effacement
+but no shift of normally midline structures. No acute large
+vascular territory infarction, or hydrocephalus is seen. The
+visualized paranasal sinuses and mastoid air cells are well
+aerated.
+IMPRESSIONS: Status post left frontotemporal craniotomy and
+resection of
+previously seen hyperdense left frontal lobe mass. There is tiny
+overlying
+extra-axial high density which could represent postoperative
+blood products. Expected pneumocephalus. Unchanged vasogenic
+edema causing sulcal effacement.
+
+MRI Head 11-15:
+1. Expected post-surgical change status post left frontoparietal
+craniotomy with mass resection. No new hemorrhage or enhancing
+mass. Vasogenic edema is unchanged. Small amount of blood
+product with subtle peripheral enhancement and restricted
+diffusion at the surgical margin likely represent expected
+post-surgical change.
+
+
+Brief Hospital Course:
+1. L frontal brain met: Pt presented with LOC/seizure and new R
+arm weakness and R facial weakness with aphasia. Aphasia quickly
+improved however, R arm and face weakness remained constant. Pt
+placed on Keppra and decadron and neurooncology consulted. THis
+was felt to be Lloyd paralysis with slow recovery 09-24 mass. Pt
+was discussed at neuroonc rounds and pt was transferred to
+neurosurg for further intervention.
+.
+2. seizure: Likely 09-24 brain met. Pt placed on keppra 750 Houston Methodist West Hospital.
+.
+3. Hypothyroidism: continued synthroid
+.
+4. ST depressions on admission: Likely rate related. CEs 12
+hours afterwards completely flat. Could represent failed stress
+test. <mark class="act" title="Appointment-related followup">Will need cardiology follow up as outpt.</mark>
+-------------
+Patient was transferred to NSURG(Oncology) on 05-17 for
+pre-operative planning for the OR. The patient was taken to the
+OR on 1993-01-09 for a L frontal craniotomy for resection of the
+mass.  He tolerated the procedure well, and there were no
+complications. The preliminary path report was positive for
+metastatic renal cell CA. He spent the evening in the ICU for Q1
+neuro checks, and was transferred to the neurosurgery floor on
+11-15.
+
+Due to the proximity of the lesion to the motor control for the
+tongue, a formal speech and swallow examination was obtained. On
+05-10, he was found to be acutely more aphasic, and a stat head
+CT was done. This was stable, without significant change,
+however given the amount of cerebral edema-he received a 10mg
+steroid bolus, and standing dose was incresed.
+
+He was seen and evaluated by PT/OT who determined he was safe to
+go home without services. He was also evaluated by
+Speech/Swallow, due to his difficulty with speaking and
+swallowing, who changed his diet order to Ground solids and thin
+liquids.
+
+On POD 4 and 5, he slowly began to regain movement in his jaw
+and RUE. He attempted to speak on POD 5, which was an
+improvement from the day before, and he also did have a slight
+increase in his RUE strength.
+
+On 02-17, he was seen by Radiation oncology. He was seen and
+evaluated by PT/OT and determined to be appropriate for
+discharge. He was discharged on 02-17 with discharge instuctions
+as noted in the discharge order
+
+Medications on Admission:
+Levothyroxine 75 mcg Tablet Sig: One (1) Tablet PO DAILY
+Percocet 5-325 mg Tablet Sig: 1-2 Tablets PO every 4-6 hours
+as needed day.
+Enoxaparin 80 mg/0.8 mL Syringe Sig: One (1) syringe
+injection Subcutaneous as directed: Administer enoxaparin
+injection as directed immediately prior to air travel.  PT ONLY
+TAKES LOVENOX PRIOR TO FLIGHTS, NOT ALL THE TIME
+
+
+Discharge Medications:
+1. Docusate Sodium 100 mg Capsule Sig: One (1) Capsule PO BID (2
+times a day).
+Disp:*60 Capsule(s)* Refills:*0*
+2. Omeprazole 20 mg Capsule, Delayed Release(E.C.) Sig: One (1)
+Capsule, Delayed Release(E.C.) PO DAILY (Daily).
+Disp:*60 Capsule, Delayed Release(E.C.)(s)* Refills:*2*
+3. Levothyroxine 75 mcg Tablet Sig: One (1) Tablet PO DAILY
+(Daily).
+4. Hydromorphone 2 mg Tablet Sig: 1-2 Tablets PO Q4H (every 4
+hours) as needed for pain.
+Disp:*60 Tablet(s)* Refills:*0*
+5. Acetaminophen 325 mg Tablet Sig: Two (2) Tablet PO Q6H (every
+6 hours) as needed for pain/fever.
+6. Levetiracetam 500 mg Tablet Sig: Two (2) Tablet PO BID (2
+times a day).
+Disp:*120 Tablet(s)* Refills:*2*
+7. Sodium Chloride 1 gram Tablet Sig: One (1) Tablet PO TID (3
+times a day).
+Disp:*90 Tablet(s)* Refills:*2*
+8. <mark class="act" title="Appointment-related followup">Outpatient Occupational Therapy</mark>
+9. <mark class="act" title="Appointment-related followup">Outpatient Speech/Swallowing Therapy</mark>
+10. <mark class="act" title="Medication-related followups">Dexamethasone 4 mg Tablet Sig: One (1) Tablet PO q8h () for
+3 days.</mark>
+<mark class="act" title="Medication-related followups">Disp:*9 Tablet(s)* Refills:*0*
+11.</mark> <mark class="act" title="Medication-related followups">Dexamethasone 4 mg Tablet Sig: One (1) Tablet PO bid () for
+3 days: to start after 4mg TID dose.</mark>
+<mark class="act" title="Medication-related followups">Disp:*6 Tablet(s)* Refills:*0*
+12.</mark> <mark class="act" title="Medication-related followups">Dexamethasone 1.5 mg Tablet Sig: Two (2) Tablet PO bid ()
+for 3 days: to start after 4mg Houston Methodist West Hospital dose.</mark>
+<mark class="act" title="Medication-related followups">Disp:*12 Tablet(s)* Refills:*0*
+13.</mark> <mark class="act" title="Medication-related followups">Dexamethasone 2 mg Tablet Sig: One (1) Tablet PO bid (): to
+start after 3mg Houston Methodist West Hospital dose.</mark>
+Disp:*60 Tablet(s)* Refills:*0*
+
+
+Discharge Disposition:
+Home
+
+Discharge Diagnosis:
+Metastatic Renal Cell CA w/left frontal lobe metastasis
+
+
+Discharge Condition:
+Neurologically Stable
+
+
+<mark class="act" title="Case-specific instructions for patient">Discharge Instructions:
+GENERAL INSTRUCTIONS
+WOUND CARE:
+??????	You or a family member should inspect your wound every day and
+report any of the following problems to your physician.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	Keep your incision clean and dry.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	You may wash your hair with a mild shampoo 24 hours after your
+sutures are removed.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	Do NOT apply any lotions, ointments or other products to your
+incision.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	DO NOT DRIVE until you are seen at the first follow up
+appointment.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	Do not lift objects over 10 pounds until approved by your
+physician.</mark>
+
+DIET
+Usually no special diet is prescribed after a craniotomy. A
+normal well balanced diet is recommended for recovery, and you
+should resume any specially prescribed diet you were eating
+before your surgery.  Be sure however, to remain well hydrated,
+and increase your consumption of fiber, as pain medications may
+cause constipation.
+
+MEDICATIONS:
+??????	Take all of your medications as ordered.  You do not have to
+take pain medication unless it is needed.  It is important that
+you are able to cough, breathe deeply, and is comfortable enough
+to walk.
+??????	Do not use alcohol while taking pain medication.
+??????	Medications that may be prescribed include:
+-Narcotic pain medication such as Dilaudid (hydromorphone).
+	-An over the counter stool softener for constipation (Colace or
+Docusate). If you become constipated, try products such as
+Dulcolax, Milk of Magnesia, first, and then Magnesium Citrate or
+Fleets enema if needed). Often times, pain medication and
+anesthesia can cause constipation.
+??????	You have been discharged on Keppra (Levetiracetam), you will
+not require blood work monitoring.
+<mark class="act" title="Case-specific instructions for patient">??????	Unless directed by your doctor, do not take any
+anti-inflammatory medicines such as Motrin, Aspirin, Advil, and
+Ibuprofen etc, as this can increase your chances of bleeding.</mark>
+??????	You are being sent home on steroid medication, make sure you
+are taking a medication to protect your stomach (Prilosec,
+Protonix, or Pepcid), as these medications can cause stomach
+irritation.  Make sure to take your steroid medication with
+meals, or a glass of milk.
+
+ACTIVITY:
+The first few weeks after you are discharged you may feel tired
+or fatigued. This is normal. You should become a little stronger
+every day. Activity is the most important measure you can take
+to prevent complications and to begin to feel like yourself
+again. In general:
+??????	Follow the activity instructions given to you by your doctor
+and therapist.
+<mark class="act" title="Case-specific instructions for patient">??????	Increase your activity slowly; do not do too much because you
+are feeling good.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	You may resume sexual activity as your tolerance allows.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	If you feel light headed or fatigued after increasing
+activity, rest, decrease the amount of activity that you do, and
+begin building your tolerance to activity more slowly.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	DO NOT DRIVE until you speak with your physician.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	Do not lift objects over 10 pounds until approved by your
+physician.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	Avoid any activity that causes you to hold your breath and
+push, for example weight lifting, lifting or moving heavy
+objects, or straining at stool.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	Do your breathing exercises every two hours.</mark>
+<mark class="act" title="Case-specific instructions for patient">??????	Use your incentive spirometer 10 times every hour, that you
+are awake.</mark>
+
+WHEN TO CALL YOUR SURGEON:
+With any surgery there are risks of complications. Although your
+surgery is over, there is the possibility of some of these
+complications developing. These complications include:
+infection, blood clots, or neurological changes. Call your
+Physician Immediately if you Experience:
+
+??????	Confusion, fainting, blacking out, extreme fatigue, memory
+loss, or difficulty speaking.
+??????	Double, or blurred vision. Loss of vision, either partial or
+total.
+??????	Hallucinations
+??????	Numbness, tingling, or weakness in your extremities or face.
+??????	Stiff neck, and/or a fever of 101.5F or more.
+??????	Severe sensitivity to light. (Photophobia)
+??????	Severe headache or change in headache.
+??????	Seizure
+??????	Problems controlling your bowels or bladder.
+??????	Productive cough with yellow or green sputum.
+??????	Swelling, redness, or tenderness in your calf or thigh.
+
+Call 911 or go to the Nearest Emergency Room if you Experience:
+??????	Sudden difficulty in breathing.
+??????	New onset of seizure or change in seizure, or seizure from
+which you wake up confused.
+??????	A seizure that lasts more than 5 minutes.
+
+Important Instructions Regarding Emergencies and After-Hour
+Calls
+??????	If you have what you feel is a true emergency at any time,
+please present immediately to your local emergency room, where a
+doctor there will evaluate you and contact us if needed. Due to
+the complexity of neurosurgical procedures and treatment of
+neurosurgical problems, effective advice regarding emergency
+situations cannot be given over the telephone.
+??????	Should you have a situation which is not life-threatening, but
+you feel needs addressing before normal office hours or on the
+weekend, please present to the local emergency room, where the
+physician there will evaluate you and contact us if needed.
+
+
+Followup Instructions:
+FOLLOW UP APPOINTMENT INSTRUCTIONS
+
+<mark class="act" title="Appointment-related followup">??????Please return to the office on Monday, 05-13 for a suture
+removal appointment.</mark> <mark class="act" title="Appointment-related followup">This is in the 804 Christina Stravenue
+Ericstad, CO 51121-8253 on the Olsen
+Building at The Ruby Valley Hospital, at 11:00am.</mark> <mark class="act" title="Appointment-related followup">This with be with Seth
+Young, Nurse Practitioner.</mark>  <mark class="act" title="Appointment-related followup">If you need to cancel or
+change, please call 53-53-611.
+??????You will have an appointment in the Brain Miners Colfax Medical Center Clinic.</mark> <mark class="act" title="Appointment-related followup">Please
+call Christine from Worldpath (126-516-5699) to get the date and time
+of the appointment.</mark> <mark class="act" title="Appointment-related followup">The Brain Miners Colfax Medical Center Clinic is located on the
+Emergency Department of The Ruby Valley Hospital, in the Emergency Department Building, 804 Christina Stravenue
+Ericstad, CO 51121-8253.</mark> <mark class="act" title="Appointment-related followup">Their
+phone number is 230-870-5350.</mark> <mark class="act" title="Appointment-related followup">Please call if you need to change
+your appointment, or require additional directions.
+??????You will not need an MRI of the brain as this was done prior to
+discharge.</mark>
+
+<mark class="act" title="Appointment-related followup">You have an appointment with Dr. Hart in the
+cyberknife/radiation clinic on 09-28 ot 10:00am.</mark>  <mark class="act" title="Appointment-related followup">This is for
+radiation planning and mapping.</mark>  <mark class="act" title="Appointment-related followup">His clinic is located on the
+16149 Hammond Vista Apt. 116
+Port Mathew, OH 48379-6162 of the Emergency Department Building.</mark>
+
+<mark class="act" title="Appointment-related followup">You should arrange for outpatient Speech Therapy when you arrive
+back in [**Country 5881**].</mark>
+
+<mark class="act" title="Appointment-related followup">Please call</mark> <mark class="act" title="Appointment-related followup">(75-866-5324 to make an appointment with Dr.
+Daniel on 03-08.</mark>
+
+
+
+Completed by:2016-06-08</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">Appointment-related followup</td><td>Will need cardiology follow up as outpt.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>Outpatient Occupational Therapy</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>Outpatient Speech/Swallowing Therapy</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Medication-related followups</td><td>Dexamethasone 4 mg Tablet Sig: One (1) Tablet PO q8h () for
+3 days.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Medication-related followups</td><td>Disp:*9 Tablet(s)* Refills:*0*
+11.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Medication-related followups</td><td>Dexamethasone 4 mg Tablet Sig: One (1) Tablet PO bid () for
+3 days: to start after 4mg TID dose.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Medication-related followups</td><td>Disp:*6 Tablet(s)* Refills:*0*
+12.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Medication-related followups</td><td>Dexamethasone 1.5 mg Tablet Sig: Two (2) Tablet PO bid ()
+for 3 days: to start after 4mg Houston Methodist West Hospital dose.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Medication-related followups</td><td>Disp:*12 Tablet(s)* Refills:*0*
+13.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Medication-related followups</td><td>Dexamethasone 2 mg Tablet Sig: One (1) Tablet PO bid (): to
+start after 3mg Houston Methodist West Hospital dose.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>Discharge Instructions:
+GENERAL INSTRUCTIONS
+WOUND CARE:
+??????	You or a family member should inspect your wound every day and
+report any of the following problems to your physician.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	Keep your incision clean and dry.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	You may wash your hair with a mild shampoo 24 hours after your
+sutures are removed.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	Do NOT apply any lotions, ointments or other products to your
+incision.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	DO NOT DRIVE until you are seen at the first follow up
+appointment.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	Do not lift objects over 10 pounds until approved by your
+physician.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	Unless directed by your doctor, do not take any
+anti-inflammatory medicines such as Motrin, Aspirin, Advil, and
+Ibuprofen etc, as this can increase your chances of bleeding.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	Increase your activity slowly; do not do too much because you
+are feeling good.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	You may resume sexual activity as your tolerance allows.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	If you feel light headed or fatigued after increasing
+activity, rest, decrease the amount of activity that you do, and
+begin building your tolerance to activity more slowly.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	DO NOT DRIVE until you speak with your physician.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	Do not lift objects over 10 pounds until approved by your
+physician.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	Avoid any activity that causes you to hold your breath and
+push, for example weight lifting, lifting or moving heavy
+objects, or straining at stool.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	Do your breathing exercises every two hours.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Case-specific instructions for patient</td><td>??????	Use your incentive spirometer 10 times every hour, that you
+are awake.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>??????Please return to the office on Monday, 05-13 for a suture
+removal appointment.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>This is in the 804 Christina Stravenue
+Ericstad, CO 51121-8253 on the Olsen
+Building at The Ruby Valley Hospital, at 11:00am.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>This with be with Seth
+Young, Nurse Practitioner.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>If you need to cancel or
+change, please call 53-53-611.
+??????You will have an appointment in the Brain Miners Colfax Medical Center Clinic.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>Please
+call Christine from Worldpath (126-516-5699) to get the date and time
+of the appointment.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>The Brain Miners Colfax Medical Center Clinic is located on the
+Emergency Department of The Ruby Valley Hospital, in the Emergency Department Building, 804 Christina Stravenue
+Ericstad, CO 51121-8253.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>Their
+phone number is 230-870-5350.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>Please call if you need to change
+your appointment, or require additional directions.
+??????You will not need an MRI of the brain as this was done prior to
+discharge.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>You have an appointment with Dr. Hart in the
+cyberknife/radiation clinic on 09-28 ot 10:00am.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>This is for
+radiation planning and mapping.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>His clinic is located on the
+16149 Hammond Vista Apt. 116
+Port Mathew, OH 48379-6162 of the Emergency Department Building.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>You should arrange for outpatient Speech Therapy when you arrive
+back in [**Country 5881**].</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>Please call</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">Appointment-related followup</td><td>(75-866-5324 to make an appointment with Dr.
+Daniel on 03-08.</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<h2>CORAL</h2>
+<dl class="card"><dt>What it is</dt><dd>40 expert-annotated de-identified OUTPATIENT oncology progress notes (breast and pancreatic, UCSF). PhysioNet credentialed. The right genre: real, independently written outpatient text.</dd><dt>Annotation</dt><dd>BRAT standoff: PROBLEM / TEST / TREATMENT entities plus modifiers and relations including HappensAtOnDuring (temporal). Not a follow-up schema, but the closest real outpatient text we have; ideal as a held-out transfer test.</dd><dt>Notes</dt><dd>Too small to train on (40 notes). Highlighted here: PROBLEM / TEST / TREATMENT spans only.</dd></dl>
+<div class="meta">38 | breastca | 279 entity spans shown</div>
+<pre>SUBJECTIVE    ***** ***** is a 49 y.o. female with ER+/PR-/HER2- <mark class="act" title="PROBLEM">left breast cancer</mark>, <mark class="act" title="PROBLEM">mammaprint low risk IDC of the left breast</mark> s/p NAHT, s/p <mark class="act" title="TREATMENT">bilateral mastectomies</mark>, <mark class="act" title="TREATMENT">s/p adjuvant tamoxifen</mark> *****/*****-*****/*****. She was switched to OS/AI in November 2018. Switched from <mark class="act" title="TREATMENT">letrozole</mark> to <mark class="act" title="TREATMENT">exemestane</mark> December 2018 due to <mark class="act" title="PROBLEM">anxiety</mark> and <mark class="act" title="PROBLEM">emotional lability</mark>.      Interval History  Attempted <mark class="act" title="TREATMENT">letrozole</mark> for August 12.5 months but switched to <mark class="act" title="TREATMENT">exemestane</mark> after experiencing <mark class="act" title="PROBLEM">anxiety</mark> and <mark class="act" title="PROBLEM">mood swings</mark>. Tolerating <mark class="act" title="TREATMENT">exemestane</mark> better.   +<mark class="act" title="PROBLEM">minimal joint aches</mark>  +<mark class="act" title="PROBLEM">mild hot flashes</mark> and <mark class="act" title="PROBLEM">insomnia</mark>  +<mark class="act" title="PROBLEM">bone pain</mark>  +<mark class="act" title="PROBLEM">vaginal dryness</mark>    Recently graduated from master&#x27;s program so has more time now to exercise.    No <mark class="act" title="PROBLEM">new or concerning bone pain</mark>, <mark class="act" title="PROBLEM">sob</mark>, <mark class="act" title="PROBLEM">cough</mark>, <mark class="act" title="PROBLEM">abd pain</mark>, <mark class="act" title="PROBLEM">n/v</mark>, headache, visual changes    ROS  <mark class="act" title="TEST">All systems</mark> reviewed and negative except for as outlined above in the HPI.        Past Medical History:   Diagnosis Date    <mark class="act" title="PROBLEM">Breast cancer (HCC)</mark>     <mark class="act" title="PROBLEM">Endometriosis</mark>     <mark class="act" title="PROBLEM">Malignant neoplasm of left female breast (HCC)</mark> 01/10/2017    <mark class="act" title="PROBLEM">PONV</mark> (<mark class="act" title="PROBLEM">postoperative nausea</mark> and <mark class="act" title="PROBLEM">vomiting</mark>)        Patient Active Problem List    Diagnosis Date Noted    <mark class="act" title="PROBLEM">Malignant neoplasm of female breast (HCC</mark>) 11/12/2017     Added automatically from request for <mark class="act" title="TREATMENT">surgery</mark> *****      <mark class="act" title="TREATMENT">Status post bilateral mastectomy</mark> 07/18/2017    <mark class="act" title="TREATMENT">S/P mastectomy</mark>, bilateral 05/27/2017     Added automatically from request for <mark class="act" title="TREATMENT">surgery</mark> *****      Postoperative visit 05/27/2017     Added automatically from request for <mark class="act" title="TREATMENT">surgery</mark> *****      <mark class="act" title="PROBLEM">Wound disruption</mark>, post-op, skin, sequela 05/27/2017     Added automatically from request for <mark class="act" title="TREATMENT">surgery</mark> *****      <mark class="act" title="PROBLEM">Breast cancer</mark>, <mark class="act" title="PROBLEM">left (HCC)</mark> 04/09/2017    <mark class="act" title="PROBLEM">PONV</mark> (<mark class="act" title="PROBLEM">postoperative nausea</mark> and <mark class="act" title="PROBLEM">vomiting</mark>) 03/27/2017    <mark class="act" title="PROBLEM">Malignant neoplasm of left female breast (HCC</mark>) 01/10/2017     <mark class="act" title="PROBLEM">Clinical stage</mark> 2-3 HR+ HER2 negative IDC on NAHT     -12/05/16: <mark class="act" title="TEST">Screening mammo</mark> - Extremely dense. LEFT 3:30, 5 cm FN: <mark class="act" title="PROBLEM">1.8cm irregular spiculated mass</mark> with <mark class="act" title="PROBLEM">overlying skin retraction</mark>.  LEFT 3:30, 2.5 cm FN: <mark class="act" title="PROBLEM">1.3cm irregular spiculated mass</mark>. LEFT 
+ inner retroareolar: <mark class="act" title="PROBLEM">Small benign appearing oval circumscribed masses</mark> measuring up to 1.3 cm. RIGHT inner retroareolar: <mark class="act" title="PROBLEM">Multiple oval circumscribed masses</mark> measuring up to 3cm.  -12/05/16: <mark class="act" title="TEST">Bilateral US</mark> (converted from screening to diagnostic):  LEFT 3:30, <mark class="act" title="TEST">5cm FN</mark>: <mark class="act" title="PROBLEM">1.8 x 1.1 x 0.9cm irregular spiculated hypoechoic mass</mark>, highly suspicious. LEFT 3:30, 2.5cm FN: <mark class="act" title="PROBLEM">0.8 x 0.9 x 1.3cm irregular spiculated mass</mark>, highly suspicious. <mark class="act" title="PROBLEM">Few small cysts</mark>. No <mark class="act" title="PROBLEM">left axillary adenopathy</mark>. RIGHT 11:00, <mark class="act" title="TEST">4cm FN</mark>: <mark class="act" title="PROBLEM">0.9 x 0.6 x 0.5cm oval mass</mark> with <mark class="act" title="PROBLEM">microlobulated margins</mark> (originally better seen on ABUS but confirmed on focused US). <mark class="act" title="PROBLEM">RIGHT inner retroareolar additional benign appearing oval circumscribed masses</mark> including <mark class="act" title="PROBLEM">cysts</mark> measuring up to 3cm.  Pathology:  LEFT 3:30, 5cm <mark class="act" title="TEST">FN</mark> (1.8cm mass): <mark class="act" title="PROBLEM">IDC</mark>. Grade 2. No <mark class="act" title="PROBLEM">LVI</mark>. l0 mm on core. ER 61-70%. <mark class="act" title="TEST">PR</mark> negative. Ki-6715-20%. Her-2 negative by <mark class="act" title="TEST">FISH  HER2</mark> negative by FISH.  LEFT 3:30, 2.5cm FN (1.3cm mass): <mark class="act" title="PROBLEM">IDC</mark>. Grade 3. No <mark class="act" title="PROBLEM">LVI</mark>. 15 mm on core. ER 41-50%. <mark class="act" title="TEST">PR</mark> 1-10%. <mark class="act" title="TEST">Ki-67</mark> 30-40%.  <mark class="act" title="TEST">HER2</mark> negative by FISH. +<mark class="act" title="PROBLEM">LCIS focally</mark>.  RIGHT 11:00. 4cm <mark class="act" title="TEST">FN</mark> (0.9<mark class="act" title="TEST">cm mass</mark>): <mark class="act" title="PROBLEM">Sclerosing adenosis</mark>, negative for <mark class="act" title="PROBLEM">CA</mark>. Felt to be concordant.  -12/22/16: <mark class="act" title="TEST">MRI breast</mark> - <mark class="act" title="PROBLEM">LEFT posterior lateral mass</mark> measures 2.4 x 2.5 x 2.9cm, abuts but does not invade the pectoralis major. Extends to within 2mm of overlying skin which is <mark class="act" title="PROBLEM">abnormally thickened</mark> and retracted, though no <mark class="act" title="PROBLEM">abnormal skin enhancement</mark>. <mark class="act" title="PROBLEM">LEFT anterior-medial smaller mass</mark> measures 1.6 x 1.3x 1.5cm. <mark class="act" title="PROBLEM">Highly suspicious lower outer (3:30-5:30) segmental nonmass enhancement inferior, medial and between both masses</mark> spanning a region 3.6 x 4.2 x 3cm. <mark class="act" title="PROBLEM">Few small inner left breast cysts</mark>. No <mark class="act" title="PROBLEM">axillary adenopathy</mark>. RIGHT breast with <mark class="act" title="PROBLEM">multiple cysts</mark> measuring up to 2.5cm in the outer breast and 3.lcm in the inner breast.  -01/06/17: <mark class="act" title="TEST">Mammaprint</mark> - low  -01/08/17: <mark class="act" title="TEST">CT CAP</mark> -  <mark class="act" title="PROBLEM">Enhancing mass in the left breast</mark>, no <mark class="act" title="PROBLEM">axillary, hilar, mammary LAD</mark>.  No <mark class="act" title="PROBLEM">distant mets</mark>  -01/10/17: <mark class="act" title="TEST">MRI</mark>  LEFT Breast:  1) Index tumor: There are 
+ <mark class="act" title="PROBLEM">two adjacent irregular masses</mark> with <mark class="act" title="PROBLEM">spiculated margins in the lower outer left breast</mark>, posterior depth, best seen on <mark class="act" title="TEST">post gad axial image</mark> 77/***** and sagittal *****/*****, with <mark class="act" title="TREATMENT">a biopsy clip</mark> centered in <mark class="act" title="PROBLEM">each mass</mark>. <mark class="act" title="TEST">Signal intensity/time curve</mark> demonstrates <mark class="act" title="PROBLEM">rapid initial rise and washout enhancement kinetics</mark>.    2) Additionally, there is <mark class="act" title="PROBLEM">asymmetric non-mass enhancement</mark> extending medially from <mark class="act" title="PROBLEM">the two index masses</mark>, concerning for <mark class="act" title="PROBLEM">DCIS</mark>. The overall span of the two adjacent masses and NME measures 34 x 32 x 28 mm.    3) There is <mark class="act" title="PROBLEM">a 5 mm oval mass in the outer central left breast</mark>, anterior depth, best seen on <mark class="act" title="TEST">post gad axial image</mark> 66/*****. <mark class="act" title="TEST">Signal intensity/time curve</mark> demonstrates <mark class="act" title="PROBLEM">rapid initial rise and washout enhancement kinetics</mark>. <mark class="act" title="PROBLEM">This mass</mark> is approximately 2 cm anterosuperior to <mark class="act" title="PROBLEM">the index masses</mark>.    RIGHT Breast:  1) There are <mark class="act" title="PROBLEM">2 adjacent foci in the upper outer right breast</mark>, anterior depth. One is 4mm and is best seen on <mark class="act" title="TEST">post gad axial image</mark> 57/*****. <mark class="act" title="TEST">Signal intensity/time curve</mark> demonstrates <mark class="act" title="PROBLEM">rapid initial rise and plateau enhancement kinetics</mark>. The other is 3 mm and is best seen on <mark class="act" title="TEST">post gad axial image</mark> 55/*****. <mark class="act" title="TEST">Signal intensity/time curve</mark> demonstrates <mark class="act" title="PROBLEM">medium initial rise</mark> and <mark class="act" title="PROBLEM">persistent enhancement kinetics</mark>.    2) There is <mark class="act" title="TREATMENT">a post biopsy clip in the outer central right breast</mark>, middle depth, site of <mark class="act" title="TEST">biopsy</mark> proven sclerosing adenosis, which was sampled at an outside facility. There is non-mass enhancement just medial to <mark class="act" title="TEST">the biopsy clip</mark>, best seen on <mark class="act" title="TEST">post gad axial image</mark> 69/*****, which is likely represents <mark class="act" title="PROBLEM">the sclerosing adenosis</mark>.  01/11/17: start <mark class="act" title="TREATMENT">tamoxifen</mark>    01/18/17: start <mark class="act" title="TREATMENT">zoladex injection</mark>    February 2017: switch from <mark class="act" title="TREATMENT">tamoxifen</mark> to <mark class="act" title="TREATMENT">letrozole</mark>  March 2017: d/c <mark class="act" title="TREATMENT">letrozole</mark> and switch back to <mark class="act" title="TREATMENT">tamoxifen</mark> September 13 depression  04/09/17:  <mark class="act" title="TREATMENT">bilateral mastectomies</mark> and left slnb: path pending  November 2018: stopped <mark class="act" title="TREATMENT">tamoxifen</mark>, switch to <mark class="act" title="TREATMENT">OS/letrozole</mark>    December 2018: switched from <mark class="act" title="TREATMENT">letrozle</mark> to <mark class="act" title="TREATMENT">exemestane</mark> due to anxiety and emotional lability, cont zoladex locally monthly        
+ Polycystic ovaries 12/26/2016     Last Assessment &amp; Plan:   Long history of <mark class="act" title="PROBLEM">amenorrhea</mark>, in the last year, they have increased to almost monthly.  Now, <mark class="act" title="PROBLEM">increased pain</mark> with <mark class="act" title="TREATMENT">ovulation</mark> and periods, they are heavier and clotting.       <mark class="act" title="PROBLEM">Cyst of breast</mark> 06/16/2015     Last Assessment &amp; Plan:   HISTORY/REASON FOR <mark class="act" title="TEST">EXAM</mark>: <mark class="act" title="PROBLEM">2 left breast lumps</mark> noted on <mark class="act" title="TEST">self breast examination</mark>.  TECHNIQUE/EXAM DESCRIPTION: <mark class="act" title="TEST">Unilateral LEFT digital diagnostic mammography</mark> was performed and interpreted with <mark class="act" title="PROBLEM">CAD</mark>, <mark class="act" title="TEST">limited left breast ultrasound</mark>.  COMPARISON: 11/26/14 and 06/01/09.  FINDINGS:  <mark class="act" title="TEST">3 views of the left breast</mark> were obtained.  The breast tissue is extremely dense.  There are is <mark class="act" title="PROBLEM">a large rounded benign-appearing nodule</mark> in the inferior medial periareolar region of the left breast at the site of one lump.  There is <mark class="act" title="PROBLEM">dense breast parenchyma</mark> in the lateral mid anterior portion of the left breast at the site of <mark class="act" title="PROBLEM">a second lump</mark> which was marked.  No <mark class="act" title="PROBLEM">spiculated mass</mark> or <mark class="act" title="PROBLEM">suspicious calcification</mark> is identified.  <mark class="act" title="TEST">Limited left breast ultrasound</mark>: There is <mark class="act" title="PROBLEM">a large cyst</mark> containing <mark class="act" title="PROBLEM">one thin partial septation</mark> located at the 10:30 position 1 cm from the nipple measuring 3.9 x 3.0 x 2.1 cm. This accounts for one of <mark class="act" title="PROBLEM">the 2 palpable nodules</mark>.  There is <mark class="act" title="PROBLEM">a small simple cyst</mark> at the 3:00 position 3 cm from the nipple measuring 4.2 x 3.8 x 3.3 mm. This accounts for <mark class="act" title="PROBLEM">the second palpable nodule</mark>.  No <mark class="act" title="PROBLEM">solid nodule</mark> is present.  IMPRESSION:  1. <mark class="act" title="PROBLEM">2 simple cysts in the left breast</mark> accounting for <mark class="act" title="PROBLEM">the palpable abnormalities</mark>.  2. <mark class="act" title="TREATMENT">Cyst aspiration</mark> of <mark class="act" title="PROBLEM">the larger cyst</mark> could be performed if <mark class="act" title="PROBLEM">pain</mark> persists.  3. If <mark class="act" title="PROBLEM">symptoms</mark> resolve <mark class="act" title="TEST">routine bilateral followup mammography</mark> in November 2015 is recommended.  The results were given to the patient at the time of visit.      <mark class="act" title="PROBLEM">Mass of breast</mark> 05/12/2015     Last Assessment &amp; Plan:   mammo done November 2014.      1. BREASTS ARE <mark class="act" title="PROBLEM">EXTREMELY DENSE</mark>, WHICH LOWERS SENSITIVITY OF <mark class="act" title="TEST">MAMMOGRAPHY</mark>. NO GROSS EVIDENCE OF <mark class="act" title="PROBLEM">MALIGNANCY</mark> AND NO <mark class="act" title="PROBLEM">INTERVAL CHANGE</mark>.    2. <mark class="act" title="TEST">SCREENING MAMMOGRAM</mark> 
+ IN ONE YEAR IS RECOMMENDED.    Recently found <mark class="act" title="PROBLEM">a couple of lumps left breast</mark>.  No nipple discharge.  <mark class="act" title="PROBLEM">Some discomfort left breast</mark>      <mark class="act" title="PROBLEM">Neck pain</mark> 05/12/2015     Last Assessment &amp; Plan:   Had a MVA last  *****.  Went to ***** ***** ***** for <mark class="act" title="TEST">workup</mark>.  She recalls <mark class="act" title="TEST">imaging</mark> as negative.  She continues to have <mark class="act" title="PROBLEM">neck pain</mark> radiating to left shoulder.  Underwent PT, this made it worse.  She is undergoing rolfing and would like to try <mark class="act" title="TREATMENT">some muscle relaxers</mark> to take prior to the sessions.  Numbness and <mark class="act" title="PROBLEM">tingling in left arm</mark>.  Her hand will shake with weight.  <mark class="act" title="PROBLEM">Her arm symptoms</mark> predated the MVA.  She was seen by the ***** for this complaint just before the MVA.       <mark class="act" title="PROBLEM">Anxiety disorder</mark> 01/12/2015       <mark class="act" title="TREATMENT">MEDICATIONS</mark>  <mark class="act" title="TREATMENT">Current Outpatient Medications</mark>   <mark class="act" title="TREATMENT">Medication Sig Dispense Refill</mark>    <mark class="act" title="TREATMENT">amoxicillin (AMOXIL)</mark> 875 mg tablet TAKE 1 TABLET BY MOUTH TWICE A DAY UNTIL GONE  0    <mark class="act" title="TREATMENT">amoxicillin-clavulanate (AUGMENTIN)</mark> 875-125 mg tablet Take by mouth.      <mark class="act" title="TREATMENT">benzonatate (TESSALON)</mark> 200 mg capsule Take 200 mg by mouth.      <mark class="act" title="TREATMENT">buPROPion (WELLBUTRIN XL)</mark> 150 mg 24 hr tablet Take 150 mg by mouth.      <mark class="act" title="TREATMENT">doxycycline (VIBRA-TABS)</mark> 100 mg tablet TAKE 1 TABLET BY MOUTH TWICE A DAY FOR 10 DAYS  0    <mark class="act" title="TREATMENT">exemestane (AROMASIN)</mark> 25 mg tablet TAKE 1 TABLET BY MOUTH EVERY DAY FOR 30 DAYS  4    <mark class="act" title="TREATMENT">HYDROcodone-acetaminophen (NORCO)</mark> 5-325 mg tablet TAKE 1 TO 2 TABS BY MOUTH EVERY 6 HOURS AS NEEDED FOR <mark class="act" title="PROBLEM">PAIN</mark> *G89*  0    <mark class="act" title="TREATMENT">IBU</mark> 800 mg tablet TAKE 1 TABLET BY MOUTH EVERY 8 HOURS AS NEEDED  3    <mark class="act" title="TREATMENT">metroNIDAZOLE (METROGEL)</mark> 0.75 % gel Apply thin film to affected area BID      <mark class="act" title="TREATMENT">ondansetron (ZOFRAN-ODT)</mark> 4 mg rapid dissolve tablet DISSOLVE 1 TAB ON THE TONGUE EVERY 6 HOURS AS NEEDED FOR <mark class="act" title="PROBLEM">NAUSEA</mark>/<mark class="act" title="PROBLEM">VOMITING</mark>  0     No current facility-administered <mark class="act" title="TREATMENT">medications</mark> for this visit.        <mark class="act" title="PROBLEM">ALLERGIES    Allergies</mark>/Contraindications   <mark class="act" title="TREATMENT">Allergen Reactions</mark>    <mark class="act" title="TREATMENT">Latex Hives</mark>    Venom-Honey Bee <mark class="act" title="PROBLEM">Anaphylaxis</mark>    <mark class="act" title="TREATMENT">Penicillins Hives</mark>    <mark class="act" title="TREATMENT">Codeine</mark> <mark class="act" title="PROBLEM">Nausea</mark> Only       <mark class="act" title="TEST">PHYSICAL EXAM</mark>  <mark class="act" title="TEST">Vital signs</mark>:   <mark class="act" title="TEST">Vitals</mark>:    01/21/19 1252 
+   <mark class="act" title="TEST">BP</mark>: 117/66   <mark class="act" title="TEST">Pulse</mark>: 75   <mark class="act" title="TEST">Resp</mark>: 18   <mark class="act" title="TEST">Temp</mark>: 37 <mark class="act" title="TEST">C</mark> (98.6 F)   <mark class="act" title="TEST">TempSrc</mark>: <mark class="act" title="TEST">Temporal   SpO2</mark>: 100%   <mark class="act" title="TEST">Weight</mark>: 64.2 kg (141 lb 9.6 oz)   <mark class="act" title="TEST">Height</mark>: 162.9 cm (5&#x27; 4.13&quot;)     ECOG: 0  Physical Examination: General appearance - alert, well appearing, and in no <mark class="act" title="PROBLEM">distress</mark>  Mental status - alert, oriented to person, place, and time  Eyes - pupils equal and reactive, <mark class="act" title="TEST">extraocular eye movements</mark> intact  Mouth - mucous membranes moist, pharynx normal without <mark class="act" title="PROBLEM">lesions</mark>  Neck - supple, no <mark class="act" title="PROBLEM">significant adenopathy</mark>  Lymphatics - no <mark class="act" title="PROBLEM">suspicious cervical, SC, axillary lymphadenopathy</mark>  Chest - clear to <mark class="act" title="TEST">auscultation</mark>, no <mark class="act" title="PROBLEM">wheezes</mark>, <mark class="act" title="PROBLEM">rales</mark> or <mark class="act" title="PROBLEM">rhonchi</mark>, symmetric air entry  Heart - normal rate, regular rhythm, normal S1, S2, no <mark class="act" title="PROBLEM">murmurs</mark>, <mark class="act" title="PROBLEM">rubs</mark>, <mark class="act" title="PROBLEM">clicks</mark> or <mark class="act" title="PROBLEM">gallops</mark>  Abdomen - soft, <mark class="act" title="PROBLEM">nontender</mark>, <mark class="act" title="PROBLEM">nondistended</mark>, no <mark class="act" title="PROBLEM">masses</mark> or <mark class="act" title="PROBLEM">organomegaly</mark>  Breasts -s/p <mark class="act" title="TREATMENT">bilateral mastectomies with implants</mark>. No <mark class="act" title="PROBLEM">suspicious masses</mark>, <mark class="act" title="PROBLEM">nodules</mark>, <mark class="act" title="PROBLEM">rashes</mark> bilaterally   <mark class="act" title="TEST">Back exam</mark> - full range of motion, no <mark class="act" title="PROBLEM">tenderness</mark>, <mark class="act" title="PROBLEM">palpable spasm</mark> or <mark class="act" title="PROBLEM">pain</mark> on motion  Neurological - alert, oriented, normal speech, no <mark class="act" title="PROBLEM">focal findings</mark> or <mark class="act" title="PROBLEM">movement disorder</mark> noted  Musculoskeletal - no <mark class="act" title="PROBLEM">joint tenderness</mark>, <mark class="act" title="PROBLEM">deformity</mark> or <mark class="act" title="PROBLEM">swelling</mark>  Extremities - <mark class="act" title="TEST">peripheral pulses</mark> normal, no <mark class="act" title="PROBLEM">pedal edema</mark>, no <mark class="act" title="PROBLEM">clubbing</mark> or <mark class="act" title="PROBLEM">cyanosis</mark>  Skin - normal coloration and turgor, no <mark class="act" title="PROBLEM">rashes</mark>, no <mark class="act" title="PROBLEM">suspicious skin lesions</mark> noted      RESULTS  None to review    ASSESSMENT &amp; PLAN  ***** ***** is a 49 y.o. female with  ER+/PR-/HER2- <mark class="act" title="PROBLEM">left breast cancer</mark>, <mark class="act" title="PROBLEM">mammaprint low risk IDC of the left breast</mark> s/p NAHT with <mark class="act" title="TREATMENT">tamoxifen</mark>, s/p <mark class="act" title="TREATMENT">bilateral mastectomies</mark>, <mark class="act" title="TREATMENT">s/p adjuvant tamoxifen</mark> *****/*****-*****/*****, switched to <mark class="act" title="TREATMENT">OS/letrozole</mark> in November 2018 but switched from <mark class="act" title="TREATMENT">letrozole</mark> to <mark class="act" title="TREATMENT">exemestane</mark> in December 2018 due to <mark class="act" title="PROBLEM">anxiety</mark> and <mark class="act" title="PROBLEM">emotional lability</mark>.       1. Breast Cancer  -NED on <mark class="act" title="TEST">exam</mark>  -Continue <mark class="act" title="TREATMENT">exemestane</mark> 25mg daily. We discussed continuing AI for at least 5 years.   -Recommend <mark class="act" title="TEST">checking estradiol level</mark> to ensure <mark class="act" title="PROBLEM">ovarian suppression</mark>, if suppressed can check q3months  -needs DEXA scan now and every 2 years. If 
+ osteopenia can consider adding <mark class="act" title="TREATMENT">bisphosphonate</mark>. Reviewed <mark class="act" title="TEST">adjuvant bisphosphonate data</mark> showing <mark class="act" title="PROBLEM">reduced distant mets</mark>, improved BCSS, and OS for <mark class="act" title="TREATMENT">postmenopausal women</mark> and <mark class="act" title="TREATMENT">bisphosphonate use</mark>.   -she is considering BSO which is reasonable since she will likely be in natural menopause after 5 years of OS/<mark class="act" title="PROBLEM">AI</mark>.  -continue <mark class="act" title="TEST">q6months exams</mark>, no imaging given <mark class="act" title="TREATMENT">bilateral mastectomies</mark>    2. Depression/<mark class="act" title="PROBLEM">Anxiety</mark>, improved  -Follow up with local psych for <mark class="act" title="TREATMENT">ongoing support</mark> as needed.      Follow-up in 6 months or sooner if she has <mark class="act" title="PROBLEM">new or worsening symptoms</mark>.     I have reviewed and updated the patient&#x27;s past medical history, <mark class="act" title="TREATMENT">medications</mark>, allergies, family and social histories. I spent a total of 40 minutes face-to-face with the patient and 30 minutes of that time was spent counseling regarding <mark class="act" title="TREATMENT">the treatment plan</mark>, <mark class="act" title="PROBLEM">symptoms</mark> and <mark class="act" title="TREATMENT">therapeutic options</mark>. Patient expresses understanding and agrees with the plan.    *****, ***** *****, am acting as a scribe for services provided by ***** ***** *****, MD on *****/*****/***** 11:46 AM      The above scribed documentation as annotated by me accurately reflects the services I have provided.   ***** ***** *****, MD  *****/*****/***** 11:51 AM      
+</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">PROBLEM</td><td>left breast cancer</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>mammaprint low risk IDC of the left breast</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TREATMENT</td><td>bilateral mastectomies</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TREATMENT</td><td>s/p adjuvant tamoxifen</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TREATMENT</td><td>letrozole</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TREATMENT</td><td>exemestane</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>anxiety</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>emotional lability</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TREATMENT</td><td>letrozole</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TREATMENT</td><td>exemestane</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TREATMENT</td><td>exemestane</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>minimal joint aches</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">25 | breastca | 114 entity spans shown</div>
+<pre>***** ***** is a 53 y.o. female with <mark class="act" title="PROBLEM">newly diagnosed HR-negative HER2</mark>+ <mark class="act" title="PROBLEM">breast cancer</mark> here to discuss <mark class="act" title="TREATMENT">systemic therapy</mark> and <mark class="act" title="TREATMENT">management</mark>    HISTORY OF PRESENT ILLNESS:    06/09/16 right diagnostic mammo with <mark class="act" title="PROBLEM">3D Tomo- spiculated mass</mark> measuring 2.2 cm at   10-11:00    in right breast with <mark class="act" title="PROBLEM">adjacent architectural distortion</mark> and <mark class="act" title="PROBLEM">nodularity</mark>.   <mark class="act" title="TEST">Ultrasound</mark> showed <mark class="act" title="PROBLEM">1.6 cm mass</mark> at 10:00 3CFN, <mark class="act" title="PROBLEM">another 1 cm mass</mark> and <mark class="act" title="PROBLEM">0.5 adjacent mass</mark>. <mark class="act" title="PROBLEM">Suspicious right axillary node</mark>    06/30/16 <mark class="act" title="TEST">right breast core biopsy</mark> - IDC  G2, no <mark class="act" title="TEST">LVI</mark>, <mark class="act" title="TEST">ER-neg</mark>, <mark class="act" title="TEST">PR</mark> neg, <mark class="act" title="TEST">HER2</mark> 3+, <mark class="act" title="TEST">FISH ratio</mark> 13,  <mark class="act" title="TEST">Ki67</mark> 10-15%, FISH   <mark class="act" title="TEST">Right axillary LN FNA</mark>: +<mark class="act" title="PROBLEM">metastatic breast adenoca</mark>    07/22/16 <mark class="act" title="TEST">Breast MRI</mark> -   RIGHT - <mark class="act" title="PROBLEM">multiple right breast masses</mark>. 2.4 x 1.7 cm with <mark class="act" title="TEST">clip</mark>, <mark class="act" title="PROBLEM">similar adjacent mass</mark> 2.4x1.6 cm also with <mark class="act" title="TEST">clip</mark>. <mark class="act" title="PROBLEM">Multiple additional smaller masses</mark>. Enlarged level 1 and level 2 axillary LNs, the largest level 1 node is 3.5 x 1.7 cm  LEFT : negative      07/24/16 <mark class="act" title="TEST">PET CT</mark> : . Solitary small focus of <mark class="act" title="PROBLEM">hypermetabolism in left ilium</mark> without definite CT correlate is concerning for <mark class="act" title="PROBLEM">metastatic disease</mark>.  <mark class="act" title="PROBLEM">Right breast mass</mark> compatible <mark class="act" title="PROBLEM">the patient&#x27;s known primary breast cancer</mark> and <mark class="act" title="PROBLEM">multiple right axillary and subpectoral lymph nodes</mark> consistent with <mark class="act" title="PROBLEM">lymph node metastases</mark>.  <mark class="act" title="PROBLEM">3.4 x 2.6 cm hyperattenuating and mildly hypermetabolic lesion</mark> seen around the left carotid artery bifurcation may represent <mark class="act" title="PROBLEM">a carotid body tumor</mark>.     07/31/16 <mark class="act" title="TEST">MRI</mark> Pelvis:  At least <mark class="act" title="PROBLEM">3 rounded foci of signal abnormality</mark> and <mark class="act" title="PROBLEM">enhancement involving the left iliac bone and bilateral sacral ala</mark>, measuring up to 12 mm, suspicious for <mark class="act" title="PROBLEM">osseous metastatic disease</mark>.       *****/*****/*****: <mark class="act" title="TEST">MR Face/Neck</mark> :  <mark class="act" title="PROBLEM">Avidly enhancing left carotid bifurcation mass</mark> with <mark class="act" title="PROBLEM">flow voids</mark> and <mark class="act" title="PROBLEM">splaying of the proximal internal and external carotid arteries</mark>. <mark class="act" title="TEST">The imaging characteristics</mark> are suggestive of <mark class="act" title="PROBLEM">a carotid body paraganglioma</mark>.        The patient is accompanied by her husband today. She has no <mark class="act" title="PROBLEM">bone pain</mark> or <mark class="act" title="PROBLEM">any other systemic concerns</mark>. She says <mark class="act" title="PROBLEM">her neck mass</mark> is longstanding and 
+ stable.       PAST MEDICAL HISTORY:  Past Medical History:   Diagnosis Date    <mark class="act" title="PROBLEM">Breast cancer</mark>     <mark class="act" title="PROBLEM">Diabetes mellitus</mark>        PAST SURGICAL HISTORY:  No past surgical history on file.    GYN HISTORY:  OB History     Gravida Para Term Preterm AB TAB SAB Ectopic Multiple Living    7 6                Obstetric Comments    Perimenopausal, LMP 1-2 months ago, G7P6, first delivery age ~17, no <mark class="act" title="TREATMENT">HRT          MEDICATIONS</mark>:  <mark class="act" title="TREATMENT">Current Outpatient Prescriptions   Medication</mark> Sig <mark class="act" title="TREATMENT">Dispense Refill</mark>    <mark class="act" title="TREATMENT">ergocalciferol, vitamin D2, (ERGOCALCIFEROL)</mark> 50,000 unit capsule       <mark class="act" title="TREATMENT">metFORMIN (GLUCOPHAGE)</mark> 500 mg tablet       <mark class="act" title="TREATMENT">omega-3 fatty acids-fish oil</mark> 300-1,000 mg capsule       GAVILYTE-G 236-22.74-6.74 -5.86 gram solution       <mark class="act" title="TREATMENT">JOLIVETTE</mark> 0.35 mg tablet       <mark class="act" title="TREATMENT">ondansetron (ZOFRAN)</mark> 8 mg tablet To be taken as needed for <mark class="act" title="PROBLEM">nausea</mark> ( see colonoscopy prep instructions for details) 1 tablet 1    <mark class="act" title="TREATMENT">ondansetron (ZOFRAN)</mark> 8 mg tablet To be taken as needed for <mark class="act" title="PROBLEM">nausea</mark> ( see colonoscopy prep instructions for details) 1 tablet 1    <mark class="act" title="TREATMENT">prednisoLONE acetate (PRED FORTE)</mark> 1 % ophthalmic suspension       <mark class="act" title="TREATMENT">PROLENSA</mark> 0.07 % DROPSOLN       <mark class="act" title="TREATMENT">VIGAMOX</mark> 0.5 % ophthalmic solution        No current facility-administered <mark class="act" title="TREATMENT">medications</mark> for this visit.        ALLERGIES:  No <mark class="act" title="PROBLEM">Known Allergies</mark>    FAMILY HISTORY:  Family History   Problem Relation Age of Onset    Family history unknown: Yes   no h/o <mark class="act" title="PROBLEM">malignancy</mark>. FA says he and wife are related.    SOCIAL HISTORY:  Social History     Social History Narrative    Lives in ***** with husband and son who is 25. 1 other estranged son in *****,  1 son in *****, 2 daughters live in *****    She moved from ***** 1 year ago    Husband was living in ***** for 33 years before coming to ***** 1 year ago with wife    She does not work, husband works cleaning buildings           REVIEW OF SYSTEMS:  Review of Systems - 14 point <mark class="act" title="TEST">review of systems</mark> negative except problems noted above.        PHYSICAL EXAM:  General appearance - alert, well appearing, and in no 
+ <mark class="act" title="PROBLEM">distress</mark>  HEENT: anicteric, OP clear  Mental status - alert, oriented to person, place, and time  <mark class="act" title="TEST">Lymph nodes</mark> - no <mark class="act" title="PROBLEM">palpable cervical or supraclavicular lymphadenopathy</mark>   Axilla - <mark class="act" title="PROBLEM">multiple right axillary nodes</mark>, largest 2.5 cm and mobile  Breasts - <mark class="act" title="PROBLEM">7x5 cm mass in RUOQ</mark>, mobile, inverted right nipple, left breast without <mark class="act" title="PROBLEM">dominant mass</mark>   Chest - clear to <mark class="act" title="TEST">auscultation</mark>, no <mark class="act" title="PROBLEM">wheezes</mark>, <mark class="act" title="PROBLEM">rales</mark> or <mark class="act" title="PROBLEM">rhonchi</mark>, symmetric air entry  Heart - normal rate, regular rhythm  Abdomen - soft,<mark class="act" title="PROBLEM">ND/NT</mark>, no <mark class="act" title="PROBLEM">HSM</mark>  Neurological - A&amp;Ox3, grossly non-focal  Musculoskeletal - No <mark class="act" title="PROBLEM">point tenderness in spine</mark> or other ***** <mark class="act" title="PROBLEM">tenderness</mark>  Extremities - no <mark class="act" title="PROBLEM">edema</mark>  Skin - normal coloration and turgor, no <mark class="act" title="PROBLEM">rashes</mark>, no <mark class="act" title="PROBLEM">suspicious skin lesions</mark> noted    LABS:    IMAGING/PATHOLOGY:  As noted above in HPI    ASSESSMENT/PLAN:    ***** ***** is a 53 y.o. female with <mark class="act" title="PROBLEM">newly diagnosed HR-negative HER2</mark>+ <mark class="act" title="PROBLEM">breast cancer</mark> here to discuss <mark class="act" title="TREATMENT">systemic therapy</mark> and <mark class="act" title="TREATMENT">management</mark>.  <mark class="act" title="TEST">Her PET CT</mark> is suspicious for <mark class="act" title="PROBLEM">bone metastasis</mark>. To complete <mark class="act" title="TEST">her staging work</mark> up we will need <mark class="act" title="TEST">MRI of pelvis</mark> and <mark class="act" title="TEST">biopsy</mark> for <mark class="act" title="TEST">definitive stage IV diagnosis</mark>.  If <mark class="act" title="PROBLEM">stage IV</mark> will initiate <mark class="act" title="TREATMENT">systemic therapy</mark> with <mark class="act" title="TREATMENT">weekly paclitaxel</mark>, q3wk <mark class="act" title="TREATMENT">trastuzumab</mark>, q3wk <mark class="act" title="TREATMENT">pertuzumab</mark>. Given HR-negative HER2+ subtype, I anticipate excellent response and possible <mark class="act" title="TREATMENT">long term disease control</mark>. She is <mark class="act" title="PROBLEM">asymptomatic</mark> from <mark class="act" title="PROBLEM">bone lesion</mark> but we can <mark class="act" title="PROBLEM">radiate bone lesions</mark> as well.     Plan:  <mark class="act" title="TEST">MRI Pelvis  MRI neck</mark> - like cartoid body, longstanding  Chemoteach for <mark class="act" title="TREATMENT">weekly paclitaxel</mark>, q3wk <mark class="act" title="TREATMENT">trastuzumab</mark>, q3wk <mark class="act" title="TREATMENT">pertuzumab</mark>  Baseline <mark class="act" title="TEST">echocardiogram  Port placement  labs</mark>      1. The patient concerns were discussed in detail. Patient verbalizes understanding of these issues and agrees with the plan.   2. <mark class="act" title="TREATMENT">Reviewed treatment options</mark>, <mark class="act" title="TREATMENT">treatment side effects</mark> in detail.   3. I reviewed the patient&#x27;s medical information and medical history.   4. I have reviewed the past medical, family, and social history sections including <mark class="act" title="TREATMENT">the medications</mark> and <mark class="act" title="PROBLEM">allergies</mark> listed in the above medical 
+ record.   5. Total face to face time: 60 ***** counseling time: 50    
+</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">PROBLEM</td><td>newly diagnosed HR-negative HER2</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>breast cancer</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TREATMENT</td><td>systemic therapy</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TREATMENT</td><td>management</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>3D Tomo- spiculated mass</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>adjacent architectural distortion</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>nodularity</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TEST</td><td>Ultrasound</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>1.6 cm mass</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>another 1 cm mass</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>0.5 adjacent mass</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>Suspicious right axillary node</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">11 | pdac | 726 entity spans shown</div>
+<pre>I had the pleasure of seeing ***** ***** for follow up of <mark class="act" title="PROBLEM">pancreatic adenocarcinoma</mark> at our GI Medical Oncology practice at the UCSF ***** ***** Family Comprehensive Cancer Center.    Patient Identification and Oncology History  ***** ***** is a 74 y.o. male who initially presented to Dr. ***** on 10/30/15 with <mark class="act" title="PROBLEM">weight loss</mark> (8 lbs over past month), <mark class="act" title="PROBLEM">decline in appetite</mark> and difficulty in controlling <mark class="act" title="TEST">his blood glucose levels</mark>.     On 11/02/15, <mark class="act" title="TEST">a CT abdomen</mark> was obtained which revealed <mark class="act" title="PROBLEM">a 7.5x3.5x3.7cm mass in the tail of the pancreas</mark> with <mark class="act" title="PROBLEM">thrombosis of splenic vein</mark> and <mark class="act" title="PROBLEM">marked narrowing</mark> and <mark class="act" title="PROBLEM">encasement of the splenic artery</mark>. There was also <mark class="act" title="PROBLEM">mass effect on the proximal peroneal vein</mark> at the level of the portal confluence. Portal vein and splenic vein were noted to be narrowed but patent. Radiologist report notes that <mark class="act" title="PROBLEM">the mass</mark> abuts the superior mesenteric artery along its superior superficial margin as it traverses the pancreas. <mark class="act" title="PROBLEM">The loss of fat plane between mass</mark> and the antral region of the stomach was suspicious for <mark class="act" title="PROBLEM">Direction extension</mark>.     Subsequently, <mark class="act" title="TEST">an EUS</mark> was performed on 11/08/15 which revealed <mark class="act" title="PROBLEM">the mass</mark> extending from the neck to the tail of the pancreas. <mark class="act" title="PROBLEM">Pancreatic ductal dilatation</mark> was noted. <mark class="act" title="PROBLEM">The mass</mark> noted to invade the muscularis propria of the stomach (T4 disease) and was noted to encase the splenic vessels. Due to difficulty in advancing the scope into the duodenum, <mark class="act" title="TEST">further evaluation</mark> of portal vein, <mark class="act" title="PROBLEM">lymph nodes and uncinate process</mark> was not possible. However, <mark class="act" title="PROBLEM">a large lymph node</mark> measuring 2.7 cm was noted adjacent to the celiac axis. <mark class="act" title="TEST">EUS staging</mark> was at least T4, N1. <mark class="act" title="TEST">Cytopathology</mark> from <mark class="act" title="TEST">the FNA</mark> of <mark class="act" title="PROBLEM">the pancreatic mass</mark> was consistent with <mark class="act" title="PROBLEM">adenocarcinoma</mark>.   He presented to a local urgent care and then ED on 11/12/15 with <mark class="act" title="PROBLEM">bilateral lower extremity weakness</mark> and <mark class="act" title="PROBLEM">slurred speech</mark> which lasted for approximately 20 minutes. It was noted that due to <mark class="act" title="PROBLEM">the abdominal and back pain</mark> he experienced after <mark class="act" title="TEST">the biopsy</mark>, patient took marijuana  (smoked/ate) after which he was noted to have <mark class="act" title="PROBLEM">the symptoms</mark> of <mark class="act" title="PROBLEM">weakness</mark> and <mark class="act" title="PROBLEM">slurred speech</mark>.     He saw Dr. ***** on 11/14/15 who recommended <mark class="act" title="TREATMENT">systemic treatment</mark> with <mark class="act" title="TREATMENT">gemcitabine</mark> and <mark class="act" title="TREATMENT">nab-paclitaxel</mark> and referred the patient to Dr. ***** for <mark class="act" title="TEST">potential surgical evaluation</mark>. During that visit on November 17, <mark class="act" title="TEST">a diagnostic laparoscopy</mark> was recommended.     He was seen in our clinic on 11/21/15 when we recommended initiation of <mark class="act" title="TREATMENT">systemic therapy</mark> with <mark class="act" title="TREATMENT">mFOLFIRINOX</mark>.    12/05/15: Cycle 1, Day 1 of <mark class="act" title="TREATMENT">mFOLFIRINOX (20% dose reduction in irinotecan</mark>)    01/03/16: <mark class="act" title="TEST">BLE Doppler Ultrasound</mark>- Negative for <mark class="act" title="PROBLEM">DVT</mark>    01/31/16: C5D1 - Admitted from the infusion center after developing <mark class="act" title="PROBLEM">dyspnea</mark> and <mark class="act" title="PROBLEM">chest tightness</mark> while receiving <mark class="act" title="TREATMENT">irinotecan</mark>. In the ED, he was noted to be in <mark class="act" title="PROBLEM">afib</mark>, <mark class="act" title="TEST">CTA</mark> neg for <mark class="act" title="PROBLEM">PE</mark>. Discharged on 02/01/16.     05/14/16: Cycle 12 of mFOLFIRINOX     05/28/2016: Began treatment holiday    Interval History:  *****/*****/*****-*****/*****/***** Presented to the ED with <mark class="act" title="PROBLEM">worsening abdominal pain</mark>: <mark class="act" title="TEST">CT scan</mark> showing <mark class="act" title="PROBLEM">tumor in pancreatic body/tail</mark> causing <mark class="act" title="PROBLEM">mass effect on the small intestine</mark> in the region of the ligament of Treitz, resulting in <mark class="act" title="PROBLEM">partial bowel obstruction</mark>. In addition, <mark class="act" title="TEST">the CT imaging</mark> demonstrates <mark class="act" title="PROBLEM">carcinomatosis</mark> with <mark class="act" title="TREATMENT">peritoneal and omental implants</mark>. During this admission, hepatobiliary performed <mark class="act" title="TEST">EGD</mark> with <mark class="act" title="TREATMENT">5 overlapping stents</mark> placed across <mark class="act" title="PROBLEM">the malignant duodenal obstruction</mark>, with evidence of <mark class="act" title="PROBLEM">carcinomatosis of the jejunum</mark> as well. <mark class="act" title="TEST">A CT scan</mark> demonstrated resolution of <mark class="act" title="PROBLEM">the intestinal obstruction</mark> s/p <mark class="act" title="TREATMENT">stent placement</mark>, lack of <mark class="act" title="PROBLEM">pneumobilia in left biliary system</mark>, and <mark class="act" title="PROBLEM">moderate ascites</mark> from prior. Hepatobiliary does not believe that <mark class="act" title="PROBLEM">his discomfort</mark> is related to <mark class="act" title="TREATMENT">the stents</mark>, though he may have <mark class="act" title="PROBLEM">free flow of fluid</mark> and gas from the more distal small bowel retrograde through the stented intestine as <mark class="act" title="TREATMENT">the stents</mark> cause lack of normal peristalsis. In addition, it is possible he may have <mark class="act" title="PROBLEM">some discomfort</mark> from <mark class="act" title="TREATMENT">the stent</mark> causing <mark class="act" title="PROBLEM">back pain</mark> (part of the duodenum is retroperitoneal).     08/25/2016: 
+ Patient had <mark class="act" title="TREATMENT">an NG tube</mark> placed    Patient&#x27;s family presents today with patient simultaneously undergoing <mark class="act" title="TEST">xray imaging</mark> of his small bowel as an inpatient at *****. <mark class="act" title="TEST">His recent CT imaging</mark> is most notable for <mark class="act" title="PROBLEM">small bowel obstruction</mark>. <mark class="act" title="TEST">His bilirubin</mark> was 3.5mg/dL on 08/24/16. His family voiced some concerns about transitioning the patient to <mark class="act" title="TREATMENT">palliative care</mark> as he reportedly is still very alert and sentient. They expressed interest in trying to transition him from <mark class="act" title="TREATMENT">an NG tube</mark> to <mark class="act" title="TREATMENT">a blended diet</mark> and attempt <mark class="act" title="TREATMENT">one final treatment regimen</mark>.     Review of Systems  General: no <mark class="act" title="PROBLEM">recent fevers</mark> or <mark class="act" title="PROBLEM">chills</mark>.  (+) <mark class="act" title="PROBLEM">weight loss</mark>  Skin: no <mark class="act" title="PROBLEM">rashes</mark>, <mark class="act" title="PROBLEM">lesions</mark> or <mark class="act" title="PROBLEM">jaundice</mark>  Eyes: no <mark class="act" title="PROBLEM">vision changes</mark>  HENT: no <mark class="act" title="PROBLEM">change in hearing</mark>, no <mark class="act" title="PROBLEM">nasal discharge</mark> or <mark class="act" title="PROBLEM">sinus tenderness</mark>. No <mark class="act" title="PROBLEM">mouth sores</mark> or <mark class="act" title="PROBLEM">sore throat</mark>.   Respiratory: no <mark class="act" title="PROBLEM">cough</mark> or <mark class="act" title="PROBLEM">shortness of breath</mark>  Cardiovascular: no <mark class="act" title="PROBLEM">chest pain</mark>, or <mark class="act" title="PROBLEM">palpitations</mark>. Positive for <mark class="act" title="PROBLEM">intermittent leg swelling</mark>  GI: no <mark class="act" title="PROBLEM">nausea</mark>, <mark class="act" title="PROBLEM">vomiting</mark>, <mark class="act" title="PROBLEM">diarrhea</mark> or <mark class="act" title="PROBLEM">constipation</mark>, no <mark class="act" title="PROBLEM">melena</mark> or <mark class="act" title="PROBLEM">BRBPR</mark>. (+) <mark class="act" title="PROBLEM">bloating</mark>  GU: no <mark class="act" title="PROBLEM">dysuria</mark>, no <mark class="act" title="PROBLEM">hematuria</mark> (+) bilirubinuria   Heme: no <mark class="act" title="PROBLEM">recent bleeding</mark> or <mark class="act" title="PROBLEM">bruising</mark>  Endocrine:  normal hair texture, no <mark class="act" title="PROBLEM">change in cold or heat intolerance</mark>  Musculoskeletal: no <mark class="act" title="PROBLEM">joint pain</mark> or <mark class="act" title="PROBLEM">back pain</mark>  Neurologic: no <mark class="act" title="PROBLEM">headaches</mark>, <mark class="act" title="PROBLEM">dizziness</mark>, <mark class="act" title="PROBLEM">falls</mark>. Positive for <mark class="act" title="PROBLEM">mild numbness</mark> or <mark class="act" title="PROBLEM">tingling in his fingertips</mark>; not interfering with fine motor activity.  Psychological: mood stable  14 systems were assessed in detail and are negative, except for those noted.    Past medical, social, and family history: Unchanged from prior visit and reviewed above in electronic record.    Allergies  No <mark class="act" title="PROBLEM">Known Allergies</mark>    <mark class="act" title="TREATMENT">Current Medications</mark>  No current facility-administered <mark class="act" title="TREATMENT">medications</mark> for this visit.   No current outpatient prescriptions on file.    Facility-Administered Medications Ordered in ***** *****:     0.9 % <mark class="act" title="TREATMENT">sodium chloride flush injection syringe</mark>, 3 mL, Intravenous, Q8H SCH, ***** ***** *****, MD, 3 mL at 08/27/16 0540    0.9 % <mark class="act" title="TREATMENT">sodium chloride flush 
+ injection syringe</mark>, 3 mL, Intravenous, PRN, ***** ***** *****, MD    0.9 % <mark class="act" title="TREATMENT">sodium chloride infusion</mark>, 50 mL/hr, Intravenous, Continuous, ***** ***** *****, MD, Last Rate: 50 mL/hr at 08/28/16 0437, 50 mL/hr at 08/28/16 0437    <mark class="act" title="TREATMENT">baclofen (LIORESAL)</mark> tablet 5 mg, 5 mg, Oral, TID *****, ***** *****, MD, 5 mg at 08/28/16 0629    <mark class="act" title="TREATMENT">carvedilol (COREG)</mark> tablet 12.5 mg, 12.5 mg, Oral, *****, ***** *****, MD, 12.5 mg at 08/28/16 0921    <mark class="act" title="TREATMENT">diltiazem (CARDIZEM CD)</mark> 24 hr capsule 120 mg, 120 mg, Oral, Daily (AM), ***** ***** *****, MD, 120 mg at 08/28/16 0921    <mark class="act" title="TREATMENT">diphenhydrAMINE (BENADRYL)</mark> injection 12.5 mg, 12.5 mg, Intravenous, Bedtime *****, ***** *****, MD, 12.5 mg at 08/28/16 0021    <mark class="act" title="TREATMENT">lidocaine (XYLOCAINE)</mark> <mark class="act" title="TREATMENT">2 % viscous solution</mark> 5 mL, 5 mL, Mouth/Throat, Q3H *****, ***** ***** *****, MD    <mark class="act" title="TREATMENT">methyl salicylate-menthol (BENGAY) ointment</mark>, , Topical, PRN, ***** ***** *****, MD    <mark class="act" title="TREATMENT">ondansetron (ZOFRAN) injection</mark> 4 mg, 4 mg, Intravenous, Q30 Min PRN, ***** ***** *****, MD, 4 mg at 08/25/16 0143    <mark class="act" title="TREATMENT">phenol (PHENASEPTIC)</mark> 1.4 % spray 1-3 spray, 1-3 spray, Mouth/Throat, Q2H PRN, ***** ***** *****, MD, 3 spray at 08/25/16 0640    <mark class="act" title="TREATMENT">traMADol (ULTRAM)</mark> tablet 50 mg, 50 mg, Oral, Q6H *****, ***** *****, MD, 50 mg at 08/28/16 0309    <mark class="act" title="TREATMENT">warfarin (COUMADIN)</mark> tablet 3 mg, 3 mg, Oral, Q PM, ***** ***** *****, MD, 3 mg at 08/27/16 2104    Physical Exam  Vital Signs:    There were no <mark class="act" title="TEST">vitals</mark> taken for this visit. I have reviewed <mark class="act" title="TEST">all vital signs</mark> at the time of <mark class="act" title="TEST">exam</mark>.   Constitutional:  Well-developed, no <mark class="act" title="PROBLEM">acute distress</mark>, ECOG 1  Skin: No <mark class="act" title="PROBLEM">rash</mark>, <mark class="act" title="PROBLEM">lesions</mark>, <mark class="act" title="PROBLEM">diaphoresis</mark>, or <mark class="act" title="PROBLEM">jaundice</mark>.  Eyes: PERRL, EOMI, <mark class="act" title="PROBLEM">anicteric sclera</mark>.  HENT: Moist mucous membranes, oropharynx clear without <mark class="act" title="PROBLEM">exudates</mark> or <mark class="act" title="PROBLEM">thrush</mark>.   Lymph Nodes: no <mark class="act" title="PROBLEM">cervical, supraclavicular lymphadenopathy</mark>  Respiratory:  Good effort, clear to <mark class="act" title="TEST">auscultation</mark> bilaterally; no <mark class="act" title="PROBLEM">wheezes</mark>, <mark class="act" title="PROBLEM">rales</mark> or <mark class="act" title="PROBLEM">rhonchi</mark>.  Cardiovascular:  Distant heart sounds. <mark class="act" title="PROBLEM">Irregular rate/rhythm</mark> but rate controlled; no <mark class="act" title="PROBLEM">murmurs</mark>, <mark class="act" title="PROBLEM">rubs</mark>, or <mark class="act" title="PROBLEM">gallops</mark>.  GI:  
+ <mark class="act" title="PROBLEM">Non-distended</mark>, bowel sounds normal, soft, <mark class="act" title="PROBLEM">tenderness</mark> to <mark class="act" title="TEST">palpation in the LLQ</mark>; palpable hepatic edge.  Musculoskeletal: <mark class="act" title="PROBLEM">Point tenderness on the right deltoid ligament</mark>.   Extremities: <mark class="act" title="PROBLEM">trace edema in BLE</mark>; no <mark class="act" title="PROBLEM">cyanosis</mark>  Neurologic:  Alert &amp; oriented x 3, CN III-XII intact, ambulates w/o difficulty, December 28 BUE/BLE strength    Diagnostic Data  Labs  Results for orders placed or performed during the hospital encounter of 08/24/16   <mark class="act" title="TEST">Complete Blood Count</mark> with Differential   Result <mark class="act" title="TEST">Value</mark> Ref <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">WBC</mark> <mark class="act" title="TEST">Count</mark> 9.6 3.4 - 10 <mark class="act" title="TEST">x10E9</mark>/L    <mark class="act" title="TEST">RBC Count</mark> 3.09 (<mark class="act" title="TEST">L</mark>) 4.4 - 5.9 x10E12/L    <mark class="act" title="TEST">Hemoglobin</mark> 9.6 (L) 13.6 - 17.5 <mark class="act" title="TEST">g/dL</mark>    <mark class="act" title="TEST">Hematocrit</mark> 28.5 (<mark class="act" title="TEST">L)</mark> 41 - 53 %    <mark class="act" title="TEST">MCV</mark> 92 80 - 100 fL    <mark class="act" title="TEST">MCH</mark> 31.1 26 - 34 <mark class="act" title="TEST">pg</mark>    <mark class="act" title="TEST">MCHC</mark> 33.7 31 - 36 <mark class="act" title="TEST">g/dL</mark>    <mark class="act" title="TEST">Platelet Count</mark> 172 140 - 450 <mark class="act" title="TEST">x10E9</mark>/L    <mark class="act" title="TEST">Neutrophil</mark> <mark class="act" title="TEST">Absolute Count</mark> 8.55 (<mark class="act" title="TEST">H</mark>) 1.8 - 6.8 <mark class="act" title="TEST">x10E9</mark>/L    <mark class="act" title="TEST">Lymphocyte Abs</mark> <mark class="act" title="TEST">Cnt</mark> 0.59 (<mark class="act" title="TEST">L</mark>) 1.0 - 3.4 <mark class="act" title="TEST">x10E9</mark>/L    <mark class="act" title="TEST">Monocyte Abs</mark> <mark class="act" title="TEST">Count</mark> 0.38 0.2 - 0.8 <mark class="act" title="TEST">x10E9</mark>/L    <mark class="act" title="TEST">Eosinophil Abs</mark> <mark class="act" title="TEST">Ct</mark> 0.01 0.0 - 0.4 <mark class="act" title="TEST">x10E9</mark>/L    <mark class="act" title="TEST">Basophil Abs</mark> <mark class="act" title="TEST">Count</mark> 0.01 0.0 - 0.1 x10E9/L    <mark class="act" title="TEST">Imm Gran</mark>, <mark class="act" title="TEST">Left Shift</mark> 0.05 &lt;0.1 x10E9/L   Basic <mark class="act" title="TEST">Metabolic Panel</mark> (<mark class="act" title="TEST">Na</mark>, <mark class="act" title="TEST">K</mark>, <mark class="act" title="TEST">Cl</mark>, <mark class="act" title="TEST">CO2</mark>, <mark class="act" title="TEST">BUN</mark>, <mark class="act" title="TEST">Cr</mark>, <mark class="act" title="TEST">Glu</mark>, <mark class="act" title="TEST">Ca</mark>)   Result <mark class="act" title="TEST">Value</mark> Ref <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">Urea</mark> <mark class="act" title="TEST">Nitrogen</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 10 6 - 22 mg/dL    <mark class="act" title="TEST">Calcium</mark>, total, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 8.1 (L) 8.8 - 10.3 mg/dL    <mark class="act" title="TEST">Chloride</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 101 97 - 108 mmol/L    <mark class="act" title="TEST">Creatinine</mark> 0.56 (L) 0.61 - 1.24 mg/dL    eGFR if non-African American 102 mL/min    <mark class="act" title="TEST">eGFR</mark> if <mark class="act" title="TEST">African</mark> Amer 118 mL/min    <mark class="act" title="TEST">Glucose</mark>, <mark class="act" title="TEST">fasting</mark> 187 (H) 70 - 99 mg/dL    <mark class="act" title="TEST">Potassium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 3.4 (L) 3.5 - 5.1 mmol/L    <mark class="act" title="TEST">Sodium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> ***** ***** - 145 mmol/L    <mark class="act" title="TEST">Carbon Dioxide</mark>, <mark class="act" title="TEST">Total</mark> 26 22 - 32 mmol/L    <mark class="act" title="TEST">Anion Gap</mark> 9 4 - 14   <mark class="act" title="TEST">Venous Blood gas</mark> w/ <mark class="act" title="TEST">Lactate</mark> (***** &amp; *****) (includes <mark class="act" title="TEST">Na</mark>+, <mark class="act" title="TEST">K</mark>+, <mark class="act" title="TEST">Ca+</mark>+, <mark class="act" title="TEST">Cl</mark>-, <mark class="act" title="TEST">Glu</mark>, <mark class="act" title="TEST">Hct</mark>, tHb)   Result Value Ref Range    <mark class="act" title="TEST">Sample</mark> <mark class="act" title="TEST">Type</mark> <mark class="act" title="TEST">Venous</mark>     <mark class="act" title="TEST">pH</mark>, <mark class="act" title="TEST">Blood</mark> 7.39 7.35 - 7.45    <mark class="act" title="TEST">PCO2</mark> 47 32 - 48 <mark class="act" title="TEST">mm Hg    PO2</mark> 32 (<mark class="act" title="TEST">LL</mark>) 83 - 108 <mark class="act" title="TEST">mm Hg</mark>    <mark class="act" title="TEST">Base excess</mark> 3 <mark class="act" title="TEST">mmol/L    Bicarbonate</mark> 28 (H) 22 - 27 <mark class="act" title="TEST">mmol/L</mark>    <mark class="act" title="TEST">Oxygen Saturation</mark> 55 (<mark class="act" title="TEST">L)</mark> 95 - 99 %    <mark class="act" title="TEST">FIO2</mark> Not specified 20 - 100 
+ %    <mark class="act" title="TEST">Sodium</mark>, <mark class="act" title="TEST">whole blood</mark> ***** ***** - 146 mmol/L    <mark class="act" title="TEST">Potassium</mark>, whole <mark class="act" title="TEST">blood</mark> 3.4 3.4 - 4.5 mmol/L    <mark class="act" title="TEST">Calcium</mark>, <mark class="act" title="TEST">Ionized</mark>, whole <mark class="act" title="TEST">blood</mark> 1.22 1.15 - 1.29 mmol/L    <mark class="act" title="TEST">Chloride</mark>, whole <mark class="act" title="TEST">blood</mark> 102 98 - 106 mmol/L    <mark class="act" title="TEST">Hemoglobin</mark>, Whole <mark class="act" title="TEST">Blood</mark> 9.9 (L) 13.6 - 17.5 <mark class="act" title="TEST">g/dL</mark>    <mark class="act" title="TEST">Hematocrit</mark> from ***** 31 (L) 45 - 65 %    <mark class="act" title="TEST">Lactate</mark>, <mark class="act" title="TEST">whole blood</mark> 1.1 0.0 - 2.0 mmol/L    <mark class="act" title="TEST">Glucose</mark>, <mark class="act" title="TEST">whole blood</mark> 190 70 - 199 mg/dL    Comments (1) no <mark class="act" title="TREATMENT">FiO2</mark> on label or req    <mark class="act" title="TEST">Aspartate</mark> <mark class="act" title="TEST">Transaminase</mark>   Result <mark class="act" title="TEST">Value</mark> Ref <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">Aspartate</mark> <mark class="act" title="TEST">transaminase</mark> 30 17 - 42 <mark class="act" title="TEST">U/L</mark>   <mark class="act" title="TEST">Alanine Transaminase</mark>   Result <mark class="act" title="TEST">Value</mark> Ref Range    <mark class="act" title="TEST">Alanine transaminase</mark> 38 12 - 60 <mark class="act" title="TEST">U/L   Bilirubin</mark>, Total   Result Value Ref Range    <mark class="act" title="TEST">Bilirubin</mark>, <mark class="act" title="TEST">Total</mark> 3.5 (H) 0.2 - 1.3 mg/dL   <mark class="act" title="TEST">Alkaline Phosphatase</mark>   Result <mark class="act" title="TEST">Value Ref</mark> Range    <mark class="act" title="TEST">Alkaline Phosphatase</mark> 265 (H) 31 - 95 <mark class="act" title="TEST">U/L</mark>   <mark class="act" title="TEST">Lipase</mark>   Result <mark class="act" title="TEST">Value</mark> Ref <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">Lipase</mark> 20 19 - 56 <mark class="act" title="TEST">U/L</mark>   <mark class="act" title="TEST">Magnesium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma   Result</mark> <mark class="act" title="TEST">Value</mark> <mark class="act" title="TEST">Ref</mark> <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">Magnesium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 1.6 (L) 1.8 - 2.4 mg/dL   Comprehensive <mark class="act" title="TEST">Metabolic Panel</mark> (<mark class="act" title="TEST">BMP</mark>, <mark class="act" title="TEST">AST</mark>, <mark class="act" title="TEST">ALT</mark>, <mark class="act" title="TEST">T.Bili</mark>, <mark class="act" title="TEST">AlkP</mark>, <mark class="act" title="TEST">TProt</mark>, <mark class="act" title="TEST">Alb</mark>)   Result <mark class="act" title="TEST">Value</mark> Ref <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">Albumin</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 2.1 (L) 3.5 - 4.8 g/dL    <mark class="act" title="TEST">Alkaline Phosphatase</mark> 246 (H) 31 - 95 <mark class="act" title="TEST">U/L    Alanine transaminase</mark> 33 12 - 60 <mark class="act" title="TEST">U/L    Aspartate transaminase</mark> 27 17 - 42 <mark class="act" title="TEST">U/L    Bilirubin</mark>, <mark class="act" title="TEST">Total</mark> 3.5 (H) 0.2 - 1.3 mg/dL    <mark class="act" title="TEST">Urea Nitrogen</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 9 6 - 22 mg/dL    <mark class="act" title="TEST">Calcium</mark>, total, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 8.2 (L) 8.8 - 10.3 mg/dL    <mark class="act" title="TEST">Chloride</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 102 97 - 108 mmol/L    <mark class="act" title="TEST">Creatinine</mark> 0.62 0.61 - 1.24 mg/dL    <mark class="act" title="TEST">eGFR</mark> if non-African American 98 mL/min    <mark class="act" title="TEST">eGFR</mark> if <mark class="act" title="TEST">African</mark> Amer 113 mL/min    <mark class="act" title="TEST">Glucose</mark>, <mark class="act" title="TEST">fasting</mark> 153 (H) 70 - 99 mg/dL    <mark class="act" title="TEST">Potassium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 4.2 3.5 - 5.1 mmol/L    <mark class="act" title="TEST">Sodium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 138 135 - 145 <mark class="act" title="TEST">mmol</mark>/L    <mark class="act" title="TEST">Protein</mark>, <mark class="act" title="TEST">Total</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 5.1 (L) 6.0 - 8.4 <mark class="act" title="TEST">g/dL</mark>    <mark class="act" title="TEST">Carbon Dioxide</mark>, <mark class="act" title="TEST">Total</mark> 28 22 - 32 mmol/L    <mark class="act" title="TEST">Anion Gap</mark> 8 4 - 14   <mark class="act" title="TEST">Complete Blood Count</mark> (includes <mark class="act" title="TEST">Platelet Count</mark>)   Result <mark class="act" title="TEST">Value</mark> <mark class="act" title="TEST">Ref</mark> <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">WBC</mark> <mark class="act" title="TEST">Count</mark> 7.9 3.4 - 10 <mark class="act" title="TEST">x10E9</mark>/L    <mark class="act" title="TEST">RBC Count</mark> 3.11 (<mark class="act" title="TEST">L</mark>) 4.4 - 5.9 x10E12/L    <mark class="act" title="TEST">Hemoglobin</mark> 
+ 9.5 (L) 13.6 - 17.5 <mark class="act" title="TEST">g/dL</mark>    <mark class="act" title="TEST">Hematocrit</mark> 29.2 (<mark class="act" title="TEST">L)</mark> 41 - 53 %    <mark class="act" title="TEST">MCV</mark> 94 80 - 100 fL    <mark class="act" title="TEST">MCH</mark> 30.5 26 - 34 <mark class="act" title="TEST">pg</mark>    <mark class="act" title="TEST">MCHC</mark> 32.5 31 - 36 <mark class="act" title="TEST">g/dL</mark>    <mark class="act" title="TEST">Platelet Count</mark> 190 140 - 450 <mark class="act" title="TEST">x10E9</mark>/L   Basic <mark class="act" title="TEST">Metabolic Panel</mark> (<mark class="act" title="TEST">Na</mark>, <mark class="act" title="TEST">K</mark>, <mark class="act" title="TEST">Cl</mark>, <mark class="act" title="TEST">CO2</mark>, <mark class="act" title="TEST">BUN</mark>, <mark class="act" title="TEST">Cr</mark>, <mark class="act" title="TEST">Glu</mark>, <mark class="act" title="TEST">Ca</mark>)   Result <mark class="act" title="TEST">Value</mark> <mark class="act" title="TEST">Ref</mark> <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">Urea</mark> <mark class="act" title="TEST">Nitrogen</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 7 6 - 22 mg/dL    <mark class="act" title="TEST">Calcium</mark>, total, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 7.8 (L) 8.8 - 10.3 mg/dL    <mark class="act" title="TEST">Chloride</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 104 97 - 108 mmol/L    <mark class="act" title="TEST">Creatinine</mark> 0.53 (L) 0.61 - 1.24 mg/dL    eGFR if non-African American 104 mL/min    <mark class="act" title="TEST">eGFR</mark> if <mark class="act" title="TEST">African</mark> <mark class="act" title="TEST">Amer</mark> &gt;120 mL/min    <mark class="act" title="TEST">Glucose</mark>, <mark class="act" title="TEST">fasting</mark> 130 (H) 70 - 99 mg/dL    <mark class="act" title="TEST">Potassium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 3.3 (L) 3.5 - 5.1 mmol/L    <mark class="act" title="TEST">Sodium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 138 135 - 145 <mark class="act" title="TEST">mmol</mark>/L    <mark class="act" title="TEST">Carbon Dioxide</mark>, <mark class="act" title="TEST">Total</mark> 25 22 - 32 mmol/L    <mark class="act" title="TEST">Anion Gap</mark> 9 4 - 14   <mark class="act" title="TEST">Prothrombin Time</mark>   Result Value Ref <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">PT</mark> 30.8 (H) 11.6 - 15.8 <mark class="act" title="TEST">s</mark>    Int&#x27;l <mark class="act" title="TEST">Normaliz</mark> <mark class="act" title="TEST">Ratio</mark> 3.0 (H) 0.9 - 1.3   <mark class="act" title="TEST">Complete Blood Count</mark> (includes <mark class="act" title="TEST">Platelet Count</mark>)   Result <mark class="act" title="TEST">Value</mark> <mark class="act" title="TEST">Ref</mark> <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">WBC</mark> <mark class="act" title="TEST">Count</mark> 9.4 3.4 - 10 <mark class="act" title="TEST">x10E9</mark>/L    <mark class="act" title="TEST">RBC Count</mark> 3.28 (<mark class="act" title="TEST">L</mark>) 4.4 - 5.9 x10E12/L    <mark class="act" title="TEST">Hemoglobin</mark> 10.3 (L) 13.6 - 17.5 <mark class="act" title="TEST">g/dL</mark>    <mark class="act" title="TEST">Hematocrit</mark> 30.5 (<mark class="act" title="TEST">L)</mark> 41 - 53 %    <mark class="act" title="TEST">MCV</mark> 93 80 - 100 fL    <mark class="act" title="TEST">MCH</mark> 31.4 26 - 34 <mark class="act" title="TEST">pg</mark>    <mark class="act" title="TEST">MCHC</mark> 33.8 31 - 36 <mark class="act" title="TEST">g/dL</mark>    <mark class="act" title="TEST">Platelet Count</mark> 224 140 - 450 <mark class="act" title="TEST">x10E9</mark>/L   Basic <mark class="act" title="TEST">Metabolic Panel</mark> (<mark class="act" title="TEST">Na</mark>, <mark class="act" title="TEST">K</mark>, <mark class="act" title="TEST">Cl</mark>, <mark class="act" title="TEST">CO2</mark>, <mark class="act" title="TEST">BUN</mark>, <mark class="act" title="TEST">Cr</mark>, <mark class="act" title="TEST">Glu</mark>, <mark class="act" title="TEST">Ca</mark>)   Result <mark class="act" title="TEST">Value</mark> <mark class="act" title="TEST">Ref</mark> <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">Urea</mark> <mark class="act" title="TEST">Nitrogen</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 7 6 - 22 mg/dL    <mark class="act" title="TEST">Calcium</mark>, total, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 8.0 (L) 8.8 - 10.3 mg/dL    <mark class="act" title="TEST">Chloride</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 101 97 - 108 mmol/L    <mark class="act" title="TEST">Creatinine</mark> 0.56 (L) 0.61 - 1.24 mg/dL    eGFR if non-African American 102 mL/min    <mark class="act" title="TEST">eGFR</mark> if <mark class="act" title="TEST">African</mark> Amer 118 mL/min    <mark class="act" title="TEST">Glucose</mark>, <mark class="act" title="TEST">fasting</mark> 136 (H) 70 - 99 mg/dL    <mark class="act" title="TEST">Potassium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 2.9 (<mark class="act" title="TEST">LL</mark>) 3.5 - 5.1 mmol/L    <mark class="act" title="TEST">Sodium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 140 135 - 145 <mark class="act" title="TEST">mmol</mark>/L    <mark class="act" title="TEST">Carbon Dioxide</mark>, <mark class="act" title="TEST">Total</mark> 27 22 - 32 mmol/L    <mark class="act" title="TEST">Anion Gap</mark> 12 4 - 14   <mark class="act" title="TEST">Prothrombin Time</mark>   Result Value Ref <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">PT</mark> 30.0 (H) 11.6 - 15.8 s    Int&#x27;l <mark class="act" title="TEST">Normaliz</mark> <mark class="act" title="TEST">Ratio</mark> 2.9 (H) 0.9 - 1.3   <mark class="act" title="TEST">Bilirubin</mark>, Total   Result Value Ref Range    <mark class="act" title="TEST">Bilirubin</mark>, <mark class="act" title="TEST">Total</mark> 3.7 (H) 0.2 - 1.3 
+ mg/dL   <mark class="act" title="TEST">Complete Blood Count</mark> (includes <mark class="act" title="TEST">Platelet Count</mark>)   Result <mark class="act" title="TEST">Value</mark> <mark class="act" title="TEST">Ref</mark> <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">WBC</mark> <mark class="act" title="TEST">Count</mark> 7.4 3.4 - 10 <mark class="act" title="TEST">x10E9</mark>/L    <mark class="act" title="TEST">RBC Count</mark> 3.17 (<mark class="act" title="TEST">L</mark>) 4.4 - 5.9 x10E12/L    <mark class="act" title="TEST">Hemoglobin</mark> 9.9 (L) 13.6 - 17.5 <mark class="act" title="TEST">g/dL</mark>    <mark class="act" title="TEST">Hematocrit</mark> 29.4 (<mark class="act" title="TEST">L)</mark> 41 - 53 %    <mark class="act" title="TEST">MCV</mark> 93 80 - 100 fL    <mark class="act" title="TEST">MCH</mark> 31.2 26 - 34 <mark class="act" title="TEST">pg</mark>    <mark class="act" title="TEST">MCHC</mark> 33.7 31 - 36 <mark class="act" title="TEST">g/dL</mark>    <mark class="act" title="TEST">Platelet Count</mark> 185 140 - 450 <mark class="act" title="TEST">x10E9</mark>/L   Basic <mark class="act" title="TEST">Metabolic Panel</mark> (<mark class="act" title="TEST">Na</mark>, <mark class="act" title="TEST">K</mark>, <mark class="act" title="TEST">Cl</mark>, <mark class="act" title="TEST">CO2</mark>, <mark class="act" title="TEST">BUN</mark>, <mark class="act" title="TEST">Cr</mark>, <mark class="act" title="TEST">Glu</mark>, <mark class="act" title="TEST">Ca</mark>)   Result <mark class="act" title="TEST">Value</mark> <mark class="act" title="TEST">Ref</mark> <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">Urea</mark> <mark class="act" title="TEST">Nitrogen</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 7 6 - 22 mg/dL    <mark class="act" title="TEST">Calcium</mark>, total, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 7.9 (L) 8.8 - 10.3 mg/dL    <mark class="act" title="TEST">Chloride</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 99 97 - 108 <mark class="act" title="TEST">mmol</mark>/L    <mark class="act" title="TEST">Creatinine</mark> 0.53 (L) 0.61 - 1.24 mg/dL    <mark class="act" title="TEST">eGFR</mark> if non-African American 104 mL/min    <mark class="act" title="TEST">eGFR</mark> if <mark class="act" title="TEST">African</mark> ***** &gt;120 mL/min    <mark class="act" title="TEST">Glucose</mark>, <mark class="act" title="TEST">fasting</mark> 140 (H) 70 - 99 mg/dL    <mark class="act" title="TEST">Potassium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 3.1 (L) 3.5 - 5.1 mmol/L    <mark class="act" title="TEST">Sodium</mark>, <mark class="act" title="TEST">Serum</mark> / <mark class="act" title="TEST">Plasma</mark> 138 135 - 145 <mark class="act" title="TEST">mmol</mark>/L    <mark class="act" title="TEST">Carbon Dioxide</mark>, <mark class="act" title="TEST">Total</mark> 29 22 - 32 mmol/L    <mark class="act" title="TEST">Anion Gap</mark> 10 4 - 14   <mark class="act" title="TEST">Prothrombin Time</mark>   Result Value Ref <mark class="act" title="TEST">Range</mark>    <mark class="act" title="TEST">PT</mark> 25.5 (H) 11.6 - 15.8 <mark class="act" title="TEST">s</mark>    Int&#x27;l <mark class="act" title="TEST">Normaliz</mark> <mark class="act" title="TEST">Ratio</mark> 2.3 (H) 0.9 - 1.3       Lab Results   Component Value Date    CANCER <mark class="act" title="TEST">ANTIGEN</mark> 19-April 4720 (H) 07/30/2016    <mark class="act" title="TEST">CANCER ANTIGEN</mark> 19-9 276 (H) 06/25/2016    <mark class="act" title="TEST">CANCER ANTIGEN</mark> 19-9 89 (H) 05/27/2016    <mark class="act" title="TEST">CANCER ANTIGEN</mark> 19-9 71 (H) 05/16/2016    <mark class="act" title="TEST">CANCER ANTIGEN</mark> 19-9 52 (H) 03/26/2016   <mark class="act" title="TEST">CA 19-9</mark>: 1252 (11/03/15)     Ref. Range *****/*****/***** *****:*****   <mark class="act" title="TEST">HBV</mark> Real Time Latest Ref Range: &lt;10 IU/mL &lt;10   <mark class="act" title="TEST">HBV</mark> Log IU/mL <mark class="act" title="TEST">Latest Ref Range</mark>: &lt;1.00  &lt;1.00       Imaging  I personally reviewed and discussed the radiology results in detail with the patient.     08/25/2016 <mark class="act" title="TEST">CT</mark> <mark class="act" title="TEST">ABDOMEN/PELVIS WITH CONTRAST</mark>   CLINICAL HISTORY: Pancreatic cancer h/o <mark class="act" title="PROBLEM">SBO</mark>.  R/O SBO COMPARISON:  None   FINDINGS: Visualized lung bases:  Unremarkable Liver:  <mark class="act" title="TREATMENT">2 biliary stents</mark> with <mark class="act" title="TREATMENT">tips in the duodenum</mark>, with <mark class="act" title="PROBLEM">associated pneumobilia</mark>. <mark class="act" title="PROBLEM">Redemonstrated moderate intrahepatic ductal dilatation</mark>, with <mark class="act" title="PROBLEM">abrupt change in caliber at the porta hepatis</mark> secondary to <mark class="act" title="PROBLEM">an obstructing, ill defined heterogeneously enhancing soft 
+ tissue nodule</mark>, unchanged. Gallbladder/bile ducts:  <mark class="act" title="PROBLEM">Contracted gallbladder</mark>. <mark class="act" title="TREATMENT">Multiple biliary stents</mark> and <mark class="act" title="PROBLEM">moderate intrahepatic biliary dilation</mark> with no <mark class="act" title="PROBLEM">pneumobilia on the left</mark>, raising the possibility of <mark class="act" title="PROBLEM">stent obstruction</mark>. Spleen:  Unremarkable Pancreas:  <mark class="act" title="PROBLEM">Unchanged ill-defined infiltrative pancreatic mass</mark> which is abutting the stomach and colon. Adrenal Glands:  <mark class="act" title="PROBLEM">Unchanged indeterminate 9 mm nodule in each adrenal gland</mark>. Kidneys:   <mark class="act" title="PROBLEM">mild left hydroureteronephrosis</mark>. The left ureter appears to be obstructed by <mark class="act" title="TREATMENT">a peritoneal implant</mark> (series 3/image 118). GI Tract:  <mark class="act" title="PROBLEM">Small bowel obstruction</mark> with <mark class="act" title="PROBLEM">distended stomach, duodenum</mark>, and <mark class="act" title="PROBLEM">proximal jejunum transition point in the distal duodenum</mark> between <mark class="act" title="TREATMENT">2 nonoverlapping enteric stents</mark> ( the 4th and 5th) , where the unstented portion of small bowel appears to abruptly narrow as it approaches the opening of <mark class="act" title="TREATMENT">the most distal stent</mark> (series 2, image 186). Beyond <mark class="act" title="TREATMENT">the most distal jejunal stent</mark>, the bowel is <mark class="act" title="PROBLEM">decompressed</mark>. No evidence of <mark class="act" title="PROBLEM">ischemia</mark> or <mark class="act" title="PROBLEM">perforation</mark>. <mark class="act" title="TREATMENT">Stents</mark> of <mark class="act" title="PROBLEM">colonic diverticulosis</mark>, without evidence of <mark class="act" title="PROBLEM">acute diverticulitis</mark>. Vasculature:  Unremarkable <mark class="act" title="PROBLEM">Lymphadenopathy</mark>: <mark class="act" title="PROBLEM">Redemonstrated peritoneal and omental nodularity</mark>. <mark class="act" title="PROBLEM">Ascites</mark>: <mark class="act" title="PROBLEM">Moderate amount of ascites</mark>, unchanged. Bones:  No <mark class="act" title="PROBLEM">suspicious lesions</mark> Pelvis:  Unremarkable   IMPRESSION: 1. <mark class="act" title="PROBLEM">New proximal small bowel obstruction</mark>, with <mark class="act" title="PROBLEM">transition point in the distal duodenum</mark> at the junction of <mark class="act" title="TREATMENT">the nonoverlapping fourth and fifth enteric stents</mark>. No evidence of <mark class="act" title="PROBLEM">ischemia</mark> or <mark class="act" title="PROBLEM">perforation</mark>. 2. <mark class="act" title="PROBLEM">Unchanged ill-defined infiltrative pancreatic mass</mark> with <mark class="act" title="PROBLEM">moderate ascites</mark> and <mark class="act" title="PROBLEM">peritoneal carcinomatosis</mark>. 3. <mark class="act" title="TREATMENT">Two biliary stents</mark> with <mark class="act" title="TREATMENT">tips in the duodenum</mark>, with <mark class="act" title="PROBLEM">associated pneumobilia</mark>. <mark class="act" title="PROBLEM">Redemonstrated moderate intrahepatic ductal dilatation</mark>, with <mark class="act" title="PROBLEM">abrupt change in caliber at the porta hepatis</mark> secondary to <mark class="act" title="PROBLEM">an obstructing, ill-defined heterogeneously enhancing soft tissue nodule</mark>, unchanged. 4. <mark class="act" title="PROBLEM">Mild left hydroureteronephrosis</mark>. The left ureter appears to be obstructed by <mark class="act" title="TREATMENT">a 
+ peritoneal implant</mark>. 5. <mark class="act" title="PROBLEM">Unchanged indeterminate 9 mm nodule in each adrenal gland</mark>, suspicious for <mark class="act" title="PROBLEM">metastatic disease</mark>. //Impression 1 discussed with *****. ***** (ED) by Dr. ***** ***** ***** (Radiology) on *****/*****/***** 1:55 AM.// //Final Impression 1 discussed with *****. ***** (GI) by Dr. ***** ***** ***** (Radiology) on 08/25/2016 approximately 12 PM.//     08/21/2016 <mark class="act" title="TEST">CT</mark> <mark class="act" title="TEST">ABDOMEN/PELVIS WITH CONTRAST</mark>   CLINICAL HISTORY: <mark class="act" title="PROBLEM">abdominal/pelvic pain</mark>, status post <mark class="act" title="TREATMENT">enteric stent placement</mark>. COMPARISON:  <mark class="act" title="TEST">CT abdomen/pelvis with contrast</mark> 08/14/2016 and <mark class="act" title="TEST">priors</mark>.   FINDINGS: Visualized lung bases:  <mark class="act" title="PROBLEM">Small left pleural effusion</mark> with <mark class="act" title="PROBLEM">associated left lower lobe atelectasis</mark>. Liver:  <mark class="act" title="TREATMENT">Redemonstrated left and right biliary stents</mark> with <mark class="act" title="TREATMENT">tips in the duodenum</mark>. <mark class="act" title="PROBLEM">Predominantly right-sided pneumobilia</mark>, and compared to 08/14/2016, new absence of <mark class="act" title="PROBLEM">left-sided pneumobilia</mark>. Similar-appearing <mark class="act" title="PROBLEM">moderate intrahepatic biliary ductal dilatation</mark>. <mark class="act" title="PROBLEM">Redemonstrated ill-defined, heterogeneously enhancing soft tissue nodule</mark> at the level of the porta hepatis (Series 3 image 46). Gallbladder:  Unremarkable Spleen:  Unremarkable Pancreas:  Redemonstration of <mark class="act" title="PROBLEM">infiltrative mass within the body and tail of the pancreas</mark> with <mark class="act" title="PROBLEM">encasement of the splenic artery</mark>, not significantly changed in size since recent prior 08/14/2016. <mark class="act" title="PROBLEM">The mass</mark> appears to contact the colon at the level of the splenic flexure. Adrenal Glands:  <mark class="act" title="PROBLEM">Unchanged small bilateral adrenal nodules</mark>. Kidneys:  Unremarkable GI Tract:  <mark class="act" title="TREATMENT">Interval placement of enteric stents</mark> from the gastric body to the proximal jejunum with resolution of <mark class="act" title="PROBLEM">duodenal obstruction</mark>. <mark class="act" title="PROBLEM">The pancreatic mass</mark> appears to contact the colon at the level of the splenic flexure, without <mark class="act" title="PROBLEM">associated obstruction</mark>.  Vasculature:  <mark class="act" title="PROBLEM">Unchanged chronic occlusion of the splenic vein</mark> with <mark class="act" title="PROBLEM">narrowing of the portosplenic confluence</mark>, and <mark class="act" title="PROBLEM">encasement of the splenic artery</mark> by <mark class="act" title="PROBLEM">the infiltrating pancreatic mass</mark> with multiple portosystemic collaterals. <mark class="act" title="PROBLEM">Lymphadenopathy</mark>: Similar appearance of 
+ <mark class="act" title="PROBLEM">peritoneal and omental nodularity</mark> with <mark class="act" title="PROBLEM">peritoneal enhancement</mark>. <mark class="act" title="PROBLEM">Ascites</mark>: Interval increase in <mark class="act" title="PROBLEM">now moderate volume intra-abdominal free fluid</mark>. Bones:  No <mark class="act" title="PROBLEM">suspicious lesions</mark>   IMPRESSION: 1.  Compared with 08/14/2016, <mark class="act" title="PROBLEM">unchanged moderate intrahepatic biliary ductal dilatation</mark>, however with absence of <mark class="act" title="PROBLEM">left-sided pneumobilia</mark>, raising the possibility of <mark class="act" title="PROBLEM">stent obstruction</mark>. 2.  <mark class="act" title="TREATMENT">Interval placement of multiple enteric stents</mark> with resolution of <mark class="act" title="PROBLEM">duodenal obstruction</mark>. 3.  <mark class="act" title="PROBLEM">Worsening moderate ascites</mark> of unclear etiology with <mark class="act" title="PROBLEM">unchanged peritoneal carcinomatosis</mark>. No <mark class="act" title="PROBLEM">free air</mark>. 4.  <mark class="act" title="PROBLEM">Redemonstrated ill-defined infiltrative pancreatic mass</mark> which appears to contact the colon at the splenic flexure.     08/25/2016 <mark class="act" title="TEST">XR KUB</mark>, FLAT PLATE, ABDOMEN 1 VIEW    COMPARISON: <mark class="act" title="TEST">Same day CT abdomen/pelvis</mark>, <mark class="act" title="TEST">KUB</mark> dated 08/17/2016 HISTORY: <mark class="act" title="TREATMENT">NG tube placement</mark>    IMPRESSION: Interval placement of <mark class="act" title="TREATMENT">an NG tube</mark> with <mark class="act" title="TREATMENT">tip</mark> projecting over the body of the stomach. Unchanged appearance of <mark class="act" title="TREATMENT">multiple biliary and enteric stents</mark> compared to <mark class="act" title="TEST">same day CT abdomen/pelvis</mark> Known <mark class="act" title="PROBLEM">small bowel obstruction</mark> is not well evaluated on <mark class="act" title="TEST">the current supine study</mark>. IV contrast within the left urinary collecting system compatible with <mark class="act" title="TEST">recent contrast-enhanced CT abdomen/pelvis</mark>.     ASSESSMENT &amp; PLAN  In summary, ***** ***** is a 74 y.o. male who presents to our GI Oncology  practice at the UCSF ***** ***** Family Comprehensive Cancer Center for a follow-up visit of <mark class="act" title="PROBLEM">pancreatic adenocarcinoma</mark> with concern for <mark class="act" title="PROBLEM">metastatic disease</mark>. He was started on <mark class="act" title="TREATMENT">systemic therapy</mark> with ***** on 12/05/15.  <mark class="act" title="TEST">His restaging scans</mark> following 4 cycles of <mark class="act" title="TREATMENT">chemotherapy</mark> were concerning for <mark class="act" title="PROBLEM">metastatic disease</mark> that is responding to <mark class="act" title="TREATMENT">treatment</mark>. <mark class="act" title="TEST">His CT chest</mark> obtained prior to initiation of <mark class="act" title="TREATMENT">chemotherapy</mark> had revealed <mark class="act" title="PROBLEM">nonspecific pulmonary nodules</mark> which decreased in size with <mark class="act" title="TREATMENT">chemotherapy</mark> raising the concern for <mark class="act" title="PROBLEM">metastatic involvement</mark>. In addition, there were <mark class="act" title="PROBLEM">liver lesions</mark> noted on <mark class="act" title="TEST">the CT abdomen</mark> but it was hard to interpret these 
+ as <mark class="act" title="TEST">the comparison scans</mark> were from October (1 month prior to initiation of <mark class="act" title="TREATMENT">chemotherapy</mark>). <mark class="act" title="TEST">His restaging scans</mark> from 03/21/16 showed continued treatment response with decrease in the size of <mark class="act" title="PROBLEM">the pancreatic mass</mark> and <mark class="act" title="PROBLEM">the hepatic lesions</mark> appearing less conspicuous.  He completed C12 of <mark class="act" title="TREATMENT">mFOLFIRINOX</mark> on 05/16/2016 and <mark class="act" title="TEST">the restaging scans</mark> from his last visit revealed <mark class="act" title="PROBLEM">stable disease in the pancreatic mass</mark>.    On 05/28/2016, he chose to take <mark class="act" title="TREATMENT">a treatment holiday</mark> vs beginning clinical trial A Phase 2, Multicenter Study of <mark class="act" title="TREATMENT">FOLFIRINOX</mark> Followed by <mark class="act" title="TREATMENT">Ipilimumab</mark> in Combination with <mark class="act" title="TREATMENT">Allogeneic GM-CSF</mark> Transfected <mark class="act" title="TREATMENT">Pancreatic Tumor Vaccine</mark> in the Treatment of <mark class="act" title="PROBLEM">Metastatic Pancreatic Cancer</mark>&quot;. Unfortunately, he progressed while on <mark class="act" title="TREATMENT">chemotherapy holiday</mark> and traveling in ***** as seen on <mark class="act" title="TEST">his restaging scans</mark> which showed <mark class="act" title="PROBLEM">interval disease progression</mark> since 05/27/2016, with <mark class="act" title="PROBLEM">increased size</mark> and <mark class="act" title="PROBLEM">infiltration of the pancreatic body/tail mass</mark> resulting in <mark class="act" title="PROBLEM">new partial bowel obstruction at the ligament of Treitz</mark>. <mark class="act" title="PROBLEM">New peritoneal and omental nodularity</mark> associated with <mark class="act" title="PROBLEM">small volume ascites</mark> is concerning for <mark class="act" title="PROBLEM">progressive peritoneal carcinomatosis</mark>; <mark class="act" title="PROBLEM">worsening porta hepatis soft tissue infiltration</mark> resulting in <mark class="act" title="PROBLEM">new biliary obstruction</mark>, with <mark class="act" title="PROBLEM">moderate right and left-sided intrahepatic biliary ductal dilatation</mark>. He underwent <mark class="act" title="TEST">ERCP</mark> with <mark class="act" title="TREATMENT">stent placement</mark> by Dr. ***** on 08/24/16.     At this time, <mark class="act" title="TEST">his most recent bilirubin</mark> was 3.5mg/dL on 08/24/16 and his 08/25/16 <mark class="act" title="TEST">CT</mark> <mark class="act" title="TEST">imaging</mark> is most notable for <mark class="act" title="PROBLEM">small bowel obstruction</mark>. Given these findings, <mark class="act" title="TREATMENT">chemotherapy</mark> will likely do more harm than good. We therefore discussed the next best step as <mark class="act" title="TREATMENT">palliative care</mark>. There is a slight possibility of resuming <mark class="act" title="TREATMENT">systemic therapy</mark> if his obstruction, <mark class="act" title="TEST">bilirubin</mark> and oral intake improve which is quite unlikely. I briefly discussed the prognosis of the patient&#x27;s disease with his family. We further discussed the results of <mark class="act" title="TEST">his same day xray</mark> of his small bowel which was pending at the time. This showed 
+ <mark class="act" title="PROBLEM">continued blockage</mark> despite <mark class="act" title="TREATMENT">stent placement</mark> which likely represents <mark class="act" title="PROBLEM">functional bowel obstruction</mark> as opposed to <mark class="act" title="PROBLEM">structural obstruction</mark> making <mark class="act" title="TREATMENT">further stent placement</mark> unlikely to help.     Plan, in brief:  - Continue to follow his PO, obstruction, <mark class="act" title="TEST">Bilirubin</mark> and <mark class="act" title="TEST">Liver function</mark>  - Follow up on full report of Xray imaging to the small bowel to determine his ability to undergo <mark class="act" title="TREATMENT">additional stent placement</mark>.  - Anticipate the need to transition the patient to <mark class="act" title="TREATMENT">hospice</mark> whether he can undergo <mark class="act" title="TREATMENT">further stent placement</mark> or not.   - Follow up with the patient on the phone directly    I spent a total of 35 minutes face-to-face with the patient&#x27;s family, over half of that time in direct counseling regarding <mark class="act" title="PROBLEM">the patient&#x27;s cancer diagnosis</mark>.            
+</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">PROBLEM</td><td>pancreatic adenocarcinoma</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>weight loss</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>decline in appetite</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TEST</td><td>his blood glucose levels</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">TEST</td><td>a CT abdomen</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>a 7.5x3.5x3.7cm mass in the tail of the pancreas</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>thrombosis of splenic vein</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>marked narrowing</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>encasement of the splenic artery</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>mass effect on the proximal peroneal vein</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>the mass</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">PROBLEM</td><td>The loss of fat plane between mass</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<h2>MedDec</h2>
+<dl class="card"><dt>What it is</dt><dd>451 MIMIC-III discharge summaries, expert-annotated medical decisions of 10 types. PhysioNet credentialed. The note TEXT is not shipped: it must be reconstructed from MIMIC-III, so only the decision spans are shown here.</dd><dt>Annotation</dt><dd>decision span (start/end offset into the MIMIC-III note) plus one of 10 categories, several follow-up-relevant: Contact related, Advice and precaution, Deferment.</dd><dt>Notes</dt><dd>No temporal field. Text requires MIMIC-III to render in context.</dd></dl>
+<div class="meta">11235_158824_902 | annotator CALIML | 116 decisions</div>
+<pre>[note text not shipped with MedDec; reconstruct from MIMIC-III with the released extract_texts.py. The decision spans below are the annotation content.]</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">C3</td><td>Klebsiella bacteremia/pneumonia</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>acquired immunodeficiency syndrome </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C5</td><td>Status post foscarnet infusion</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C6</td><td>via Port-A-Cath</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>Abdominal pain </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C7</td><td>Blood cultures times two and Mycobacterium avium-intracellulare cultures were drawn</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C7</td><td>hypoxic at 87%</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>Cough at baseline secondary to chronic sinusitis; unchanged</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>Abdominal pain on and off at 4/10</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>Mild diarrhea</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>No blood visible</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>No nausea or vomiting</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>Cough productive of clear sputum</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>Thrush is a persistent problem.</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">22581_120312_11162 | annotator CALIML | 344 decisions</div>
+<pre>[note text not shipped with MedDec; reconstruct from MIMIC-III with the released extract_texts.py. The decision spans below are the annotation content.]</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">C1</td><td>Found Unresponsive</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C6</td><td>intubated </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C6</td><td>extubated </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>history of marginal zone lymphoma </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C6</td><td>s/p splenectomy </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>found unresponsive for up to 1 hour</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C5</td><td>recent flu vaccination</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>history of shingles</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>EMS found the patient to be tachycardic, but with poor pulses and hypotension</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C6</td><td>cardioverted </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>he was still found to be unresponsive with the following vital signs: T 101.3, HR 144, SBP 72, RR44</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C6</td><td>intubated </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C5</td><td>3 pressors</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C7</td><td>Initial WBC was 3.1 with 12% bands; eventually the count rose to 13.1 with 44% bands. BUN/CR 23/2.1</td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>
+<div class="meta">10814_101543_52781 | annotator CALIML | 254 decisions</div>
+<pre>[note text not shipped with MedDec; reconstruct from MIMIC-III with the released extract_texts.py. The decision spans below are the annotation content.]</pre>
+<table><tr><th>Type</th><th>Action span</th><th>Timing</th><th>Trigger</th></tr>
+<tr><td class="t">C3</td><td>Bacteremia</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C6</td><td>Transesophagealechocardiogram</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>h/o CAD </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C6</td><td>s/p stenting</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>systolic CHF (EF40-45%), atrial fibrillation</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>ardiac arrest with heart block</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C6</td><td>s/p AICD/pacemaker</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C6</td><td>trach/PEG</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>recent MRSA bacteremia</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>hematuria and GI bleed </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>fevers and baceteria.</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C3</td><td>pneumonia and MRSA bacteremia and sepsis</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C5</td><td>on IV vancomycin </td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td class="t">C5</td><td>aspirin </td><td>&mdash;</td><td>&mdash;</td></tr>
+</table>

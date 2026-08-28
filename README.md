@@ -8,6 +8,14 @@ Companion site for the paper **"Clinical Intent Extraction: A FHIR-Aligned Repre
 - **PDF (single-column)** — [circa_1col.pdf](circa_1col.pdf)
 - **Word (single-column)** — [circa_1col.docx](circa_1col.docx)
 
+## Supplementary material
+
+- [dataset_examples.html](dataset_examples.html) — What the text and native annotation of each source corpus (CLIP, MedDec, ap_parsing, PaniniQA, SIMORD/ACI-Bench) look like.
+- [circa_litreview.md](circa_litreview.md) — Literature review notes informing the paper's positioning.
+- [human_studies_protocol.md](human_studies_protocol.md) — Protocol for the two minimal human studies (exhaustive whole-note validation; second-annotator reliability).
+- [circa_forword.html](circa_forword.html) — Word-conversion source used to build the DOCX (identical content to `circa.html` with figures rasterized to PNG).
+- [scripts/docx_sync.py](scripts/docx_sync.py) — Post-processor that syncs Figure 1 layout and Table 7 styling in the DOCX to match the HTML.
+
 ## What CIRCA is
 
 - The **Clinical Intent Extraction (CIE)** task: given a clinical note, extract every prospective clinical action (follow-up, order, referral, instruction) as a structured record.
