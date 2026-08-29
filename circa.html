@@ -144,7 +144,11 @@
   .pipe .badge{float:right;font-family:var(--sans);font-size:.7rem;font-weight:700;border-radius:6px;padding:.02rem .4rem;font-variant-numeric:tabular-nums}
   .pipe .branch-a .badge{background:var(--accent-soft);color:var(--accent)}
   .pipe .branch-b .badge{background:var(--amber-soft);color:var(--amber)}
-  /* top-right PDF download button (paper page) */
+  /* top-right PDF + DOCX download buttons (paper page) */
+  .fab-bar{position:fixed;top:1rem;right:1rem;z-index:100;display:flex;gap:.4rem}
+  .fab-bar .pdf-fab{position:static}
+  .docx-fab{background:#4b5563}
+  .docx-fab:hover{background:#374151}
   .pdf-fab{position:fixed;top:1rem;right:1rem;z-index:100;font-family:var(--sans);
     font-size:.8rem;font-weight:600;background:var(--accent);color:#fff;
     padding:.45rem .8rem;border-radius:6px;text-decoration:none;border:none;
@@ -153,7 +157,7 @@
   @media print{.pdf-fab{display:none}}
 </style>
 
-  <a class="pdf-fab no-docx" href="circa_1col.pdf" download>Download PDF</a>
+  <div class="fab-bar no-docx"><a class="pdf-fab" href="circa_1col.pdf" download>PDF</a><a class="pdf-fab docx-fab" href="circa_1col.docx" download>DOCX</a></div>
 <div class="wrap">
   <h1>Clinical Intent Extraction: A FHIR-Aligned Representation and the CIRCA Benchmark</h1>
   <p class="byline"><b>Alexander Apartsin</b><sup>a</sup> &nbsp;·&nbsp; <b>Yehudit Aperstein</b><sup>b,</sup><sup>*</sup><br><sup>a</sup>Holon Institute of Technology, Holon, Israel &nbsp;&nbsp; <sup>b</sup>Afeka College of Engineering, Tel Aviv, Israel<br><sup>*</sup>Corresponding author: <a href="mailto:apersteiny@afeka.ac.il">apersteiny@afeka.ac.il</a></p>
