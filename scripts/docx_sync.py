@@ -248,6 +248,97 @@ def style_pipeline_caption(tbl_el):
                         b = rPr.find(qn(tag))
                         if b is not None: rPr.remove(b)
 
+def convert_accents_to_black(doc):
+    """Camera-ready convention: all text black. Convert teal/muted/amber runs
+    to black across the document body (does NOT touch table cell content — the
+    banded Table 7 keeps its amber accents for meaningful signal)."""
+    n = 0
+    for para in doc.paragraphs:
+        for run in para.runs:
+            if run.font.color is not None and run.font.color.rgb is not None:
+                rgb = run.font.color.rgb
+                if rgb == TEAL or rgb == MUTED:
+                    run.font.color.rgb = RGBColor(0, 0, 0)
+                    n += 1
+    # Also fix style-level colors on Heading styles + section-num
+    for style_name in ('Heading 1','Heading 2','Heading 3','Heading 4','Title','Subtitle'):
+        try:
+            s = doc.styles[style_name]
+            if s.font.color is not None and s.font.color.rgb is not None:
+                s.font.color.rgb = RGBColor(0, 0, 0); n += 1
+        except KeyError:
+            pass
+    return n
+
+def shrink_narrow_figures_to_single_column(doc, single_col_inches=3.15,
+                                            names_to_shrink=('fig1_field_presence',)):
+    """Sparse/small figures should be single-column so prose flows around them
+    (avoids half-empty pages when a full-width float dominates). Match by embedded
+    image filename in `pic:cNvPr@descr`, so this is explicit and stable."""
+    W_PIC = 'http://schemas.openxmlformats.org/drawingml/2006/picture'
+    n = 0
+    for shape in doc.inline_shapes:
+        inline = shape._inline
+        cNvPr = inline.findall('.//'+ '{'+W_PIC+'}cNvPr')
+        descrs = [el.get('descr','') for el in cNvPr]
+        if not any(any(name in d for name in names_to_shrink) for d in descrs):
+            continue
+        new_w = Inches(single_col_inches)
+        if shape.width > new_w:
+            scale = float(new_w) / float(shape.width)
+            shape.height = int(shape.height * scale)
+            shape.width = new_w
+            n += 1
+    return n
+
+def move_captions_into_wide_sections(doc):
+    """When a table spans both columns (full-width float via continuous section
+    breaks), its caption should also span both columns. Pandoc places the caption
+    AFTER the section-return-to-2-columns, so it renders in one column.
+
+    Detect: a paragraph whose text starts with 'Table N.' or 'Figure N.', that
+    lives in a 2-column section, immediately after a full-width (1-column) block.
+    Move it INSIDE the preceding 1-column section by inserting a sectPr right
+    after the caption paragraph that mirrors the previous 1-column section, and
+    push the return-to-2-columns to after the caption."""
+    from copy import deepcopy
+    W_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+    body = doc.element.body
+    paras = [el for el in body if el.tag == qn('w:p')]
+    moved = 0
+    for i, p in enumerate(paras):
+        text = ''.join(t.text or '' for t in p.findall('.//'+qn('w:t')))
+        import re
+        if not re.match(r'^\s*(Table|Figure)\s+\d+\.', text):
+            continue
+        # find the paragraph just before this one that carries a sectPr (section break)
+        # its sectPr defines the section this caption's PREDECESSOR belonged to
+        for j in range(i-1, -1, -1):
+            q = paras[j]
+            pPr = q.find(qn('w:pPr'))
+            if pPr is None: continue
+            sectPr = pPr.find(qn('w:sectPr'))
+            if sectPr is None: continue
+            # is that section 1-column (wide)?
+            cols = sectPr.find(qn('w:cols'))
+            if cols is None: continue
+            n_cols = int(cols.get(qn('w:num')) or '1')
+            if n_cols != 1: break  # not a wide section, don't touch
+            # Move the sectPr from q -> caption p (so caption stays in 1-col; break comes AFTER caption)
+            captionPr = p.find(qn('w:pPr'))
+            if captionPr is None:
+                captionPr = etree.SubElement(p, qn('w:pPr'))
+                p.insert(0, captionPr)
+            # remove any existing sectPr on caption
+            old_cap_sect = captionPr.find(qn('w:sectPr'))
+            if old_cap_sect is not None: captionPr.remove(old_cap_sect)
+            captionPr.append(deepcopy(sectPr))
+            # remove from q's pPr
+            pPr.remove(sectPr)
+            moved += 1
+            break
+    return moved
+
 def main(path):
     doc = Document(path)
     tbl = find_worked_examples_table(doc)
@@ -258,6 +349,12 @@ def main(path):
         print('WARN: worked-examples table not found')
     ok = enlarge_pipeline_figure(doc)
     print(f'Figure 1 enlarged to full width: {ok}')
+    n_shrunk = shrink_narrow_figures_to_single_column(doc)
+    print(f'narrow figures shrunk to single column: {n_shrunk}')
+    n_cap = move_captions_into_wide_sections(doc)
+    print(f'captions moved into wide sections: {n_cap}')
+    n_black = convert_accents_to_black(doc)
+    print(f'runs/styles color -> black: {n_black}')
     doc.save(path)
     print(f'saved -> {path}')
 
