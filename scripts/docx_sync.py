@@ -339,6 +339,100 @@ def move_captions_into_wide_sections(doc):
             break
     return moved
 
+def fix_abstract_keywords_spacing(doc, gap_pt=6):
+    """Add breathing room between the abstract paragraph and the keywords line
+    (which currently sit flush against each other)."""
+    n = 0
+    for i, p in enumerate(doc.paragraphs):
+        text = p.text.strip()
+        if text.startswith('Keywords:'):
+            pf = p.paragraph_format
+            pf.space_before = Pt(gap_pt)
+            n += 1
+    return n
+
+def add_top_margin_above_wide_floats(doc, gap_pt=10):
+    """Wide (full-width) tables/figures land flush against the top text margin
+    in Word because the paragraph carrying the section break has its own height
+    minimized. Add a small SPACER paragraph inside each 1-column section,
+    immediately before the first content block, with an exact line height so the
+    gap actually renders."""
+    W_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+    body = doc.element.body
+    added = 0
+    # walk block children of body in order; a 1-col section is marked by a
+    # sectPr with <w:cols w:num='1'/> on some paragraph; the previous 2-col
+    # section ends there. The 1-col section spans from the previous sectPr-end
+    # to that paragraph.
+    def is_one_col_break(pPr):
+        if pPr is None: return False
+        sectPr = pPr.find(qn('w:sectPr'))
+        if sectPr is None: return False
+        cols = sectPr.find(qn('w:cols'))
+        if cols is None: return True   # default = 1-col
+        return int(cols.get(qn('w:num')) or '1') == 1
+    kids = list(body)
+    # for each paragraph carrying a 1-col section break, walk back to find the
+    # start of that 1-col section (right after the previous sectPr) and insert
+    # a spacer paragraph AT that start position, in front of the first non-break block
+    for i, el in enumerate(kids):
+        if el.tag != qn('w:p'): continue
+        pPr = el.find(qn('w:pPr'))
+        if not is_one_col_break(pPr): continue
+        # find start of THIS 1-col section: paragraph after the most recent sectPr in [:i]
+        start = 0
+        for j in range(i-1, -1, -1):
+            prev = kids[j]
+            if prev.tag != qn('w:p'): continue
+            prev_pPr = prev.find(qn('w:pPr'))
+            if prev_pPr is None: continue
+            if prev_pPr.find(qn('w:sectPr')) is not None:
+                start = j + 1; break
+        # skip empty leading paragraphs to find first content block
+        first_content = None
+        for j in range(start, i):
+            k = kids[j]
+            if k.tag == qn('w:tbl') or (k.tag == qn('w:p') and (k.findall('.//'+qn('w:t')) or k.findall('.//'+qn('w:drawing')))):
+                first_content = k; break
+        if first_content is None: continue
+        # insert a spacer paragraph BEFORE first_content
+        spacer = etree.Element(qn('w:p'))
+        sp_pPr = etree.SubElement(spacer, qn('w:pPr'))
+        sp_sp = etree.SubElement(sp_pPr, qn('w:spacing'))
+        # exact line height so Word doesn't clamp it
+        twips = int(gap_pt * 20)   # 20 twips per pt
+        sp_sp.set(qn('w:line'), str(twips))
+        sp_sp.set(qn('w:lineRule'), 'exact')
+        sp_sp.set(qn('w:before'), '0')
+        sp_sp.set(qn('w:after'), '0')
+        first_content.addprevious(spacer)
+        added += 1
+    return added
+
+def tighten_caption_spacing(doc, before_pt=2, after_pt=2):
+    """Reduce space above/below captions so figures/tables sit close to their
+    caption text. The Word 'Table Caption' style defaults to a 12pt space-before
+    which looks like an accidental gap in 2-column journal layout. We tighten
+    both 'Table Caption' and 'Image Caption' to ~2pt each side."""
+    n = 0
+    for style_name in ('Table Caption','Image Caption','Caption'):
+        try:
+            s = doc.styles[style_name]
+            pf = s.paragraph_format
+            pf.space_before = Pt(before_pt)
+            pf.space_after = Pt(after_pt)
+            n += 1
+        except KeyError:
+            pass
+    # also override on each caption paragraph in case a direct property was set
+    import re
+    for p in doc.paragraphs:
+        if re.match(r'^\s*(Table|Figure)\s+\d+\.', p.text):
+            pf = p.paragraph_format
+            pf.space_before = Pt(before_pt)
+            pf.space_after = Pt(after_pt)
+    return n
+
 def main(path):
     doc = Document(path)
     tbl = find_worked_examples_table(doc)
@@ -355,6 +449,12 @@ def main(path):
     print(f'captions moved into wide sections: {n_cap}')
     n_black = convert_accents_to_black(doc)
     print(f'runs/styles color -> black: {n_black}')
+    n_cap_sp = tighten_caption_spacing(doc)
+    print(f'caption styles tightened: {n_cap_sp}')
+    n_topmar = add_top_margin_above_wide_floats(doc)
+    print(f'top-margin spacers added above wide floats: {n_topmar}')
+    n_kw = fix_abstract_keywords_spacing(doc)
+    print(f'abstract/keywords spacing fixed: {n_kw}')
     doc.save(path)
     print(f'saved -> {path}')
 
