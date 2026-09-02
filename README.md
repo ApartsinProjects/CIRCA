@@ -24,7 +24,7 @@ Companion site for the paper **"Clinical Intent Extraction: A FHIR-Aligned Repre
 
 ## Dataset deposit
 
-- **Zenodo:** [10.5281/zenodo.22058593](https://doi.org/10.5281/zenodo.22058593)
+- **Zenodo:** [10.5281/zenodo.22251272](https://doi.org/10.5281/zenodo.22251272)
 - **Package** (annotations + KART mappings + code, no source note text): [circa-cir-v1.zip](circa-cir-v1.zip)
 
 The MIMIC-derived layers ship as stand-off annotations (character offsets + SHA-256) that a credentialed user rehydrates from their own MIMIC-III copy with the included `rebuild.py`; only the public ACI-Bench layer is distributed with its note text. See the deposit's `README.md` and `DATASHEET.md` for the reconstruction procedure and the data-provenance / compliance statement.
@@ -34,7 +34,7 @@ The MIMIC-derived layers ship as stand-off annotations (character offsets + SHA-
 ```
 Apartsin A, Aperstein Y. Clinical Intent Extraction: A FHIR-Aligned Representation
 and the CIRCA Benchmark. 2026.
-Dataset: https://doi.org/10.5281/zenodo.22058593
+Dataset: https://doi.org/10.5281/zenodo.22251272
 ```
 
 ## Compliance
